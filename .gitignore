@@ -1,4 +1,5 @@
 DATASET/
+text_module/
 __pycache__/
 venv/
 .idea/

@@ -27,8 +27,8 @@ class PreProcessor():
        data = pd.read_csv(DIR_DATASET + '/BanglaMCT7/train.csv')
        data_test = pd.read_csv(DIR_DATASET + '/BanglaMCT7/test.csv')
 
-       data, data_test = data.sample(100), data_test.sample(100)
-       data, data_test = data.reset_index(), data_test.reset_index()
+       # data, data_test = data.sample(100), data_test.sample(100)
+       # data, data_test = data.reset_index(), data_test.reset_index()
 
        # Remove null
        print(f'Before removing null : {len(data)}')
