@@ -1,0 +1,7 @@
+DATASET/
+__pycache__/
+venv/
+.idea/
+*.pyc
+*.pkl
+*.pickle
