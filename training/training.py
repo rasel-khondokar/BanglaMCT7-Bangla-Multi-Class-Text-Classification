@@ -46,6 +46,7 @@ class ModelTrainer():
         plt.xlabel('Epoch')
         plt.legend(['Train', 'Test'], loc='upper left')
         plt.savefig(f'{DIR_IMAGES_HISTORY}/{name}_loss.png')
+        plt.close()
 
     def model_cnn_bi_lstm(self, num_classes, vocab_size, embedding_dimension, input_length):
         model = tf.keras.models.Sequential([
@@ -86,7 +87,7 @@ class ModelTrainer():
         vocab_size = 5000
         num_classes = len(list(np.unique(data['category'])))
         batch_size = 64
-        num_epochs = 2
+        num_epochs = 100
         filepath_best_model = f"{DIR_RESOURCES}/{name}_best_model.pkl"
 
         acc_callback = myCallback()
@@ -144,7 +145,7 @@ class ModelTrainer():
     def train_fasttext(self, name):
 
         name = f'{name}_fasttext'
-        num_epochs = 2
+        num_epochs = 100
         batch_size = 256
 
         data, data_test = self.data, self.data_test

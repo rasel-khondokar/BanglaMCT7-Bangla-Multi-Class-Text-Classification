@@ -19,6 +19,7 @@ class DataVisualizer():
         plt.title("Dataset Distribution", y=1.02)
         file_path = DIR_IMAGES_EDA + '/class_distribution.png'
         plt.savefig(file_path)
+        plt.close()
         print(f'class distribution image saved to - {file_path}')
 
     def show_document_length_distribution(self):
@@ -37,6 +38,7 @@ class DataVisualizer():
         plt.title('Length-Frequency Distribution')
         file_path = DIR_IMAGES_EDA + '/document_length_distribution.png'
         plt.savefig(file_path)
+        plt.close()
         print(f'document length distribution image saved to - {file_path}')
 
         print(f"Maximum Length of a Document: {max(self.data.Length)}")
@@ -91,3 +93,4 @@ class DataVisualizer():
         ax.xaxis.set_ticklabels(class_names, rotation=45);
         file_path = DIR_IMAGES_EDA + '/data_summary.png'
         plt.savefig(file_path)
+        plt.close()

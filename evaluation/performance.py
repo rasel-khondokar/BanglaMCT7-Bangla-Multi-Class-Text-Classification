@@ -28,7 +28,7 @@ class Evaluator():
         cm = confusion_matrix(y, y_pred)
         report = classification_report(y, y_pred)
         print(report)
-        report_filename =  self.model_filepath.replace(DIR_RESOURCES, '').replace('.pkl', '')
+        report_filename =  self.model_filepath.replace(DIR_RESOURCES, '').replace('.pkl', '').replace('.pickle', '')
         with open(f'{DIR_PERFORMENCE_REPORT}{report_filename}_{data_split}.txt', 'w') as file:
             file.write('___________________ confusion_matrix _____________________\n')
             file.write(str(cm))
