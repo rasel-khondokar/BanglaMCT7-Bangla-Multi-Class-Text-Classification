@@ -16,18 +16,27 @@ python __main__.py
 
 ## EDA
 
+EDA images saved to :  _`REPORT/IMAGES/EDA`_
+
 ![class distribution](REPORT/IMAGES/EDA/class_distribution.png?raw=true)
 ![summary](REPORT/IMAGES/EDA/data_summary.png?raw=true)
 ![document length distribution](REPORT/IMAGES/EDA/document_length_distribution.png?raw=true)
 
 ## Trained models accuracy
 
+Trained models accuracy & loss history images saved to :  _`REPORT/IMAGES/HISTORY`_
+
+Trained models performence report saved to :  _`REPORT/PERFORMENCE`_
+
 <!-- TABLE_GENERATE_START -->
 
-| Model  | Train | Test |
-| --- | ---- |---- |
-| LSTM  | 0.99  | 0.99|
-| GRU  | 0.99  |0.99|
+| Model  | Tokenaizer | Train | Test |
+| --- | ---- |---- |---- |
+| BIDIRECTIONAL GRU  | keras tokenaizer  | 0.99  | 0.99|
+| CNN & BIDIRECTIONAL LSTM  | keras tokenaizer  | 0.99  |0.99|
+| DEEP ANN  | fasttest tokenaizer  | 0.99  | 0.99|
+| SIMPLE ANN  | fasttest tokenaizer  | 0.99  |0.99|
+| RANDOM FOREST  | tf-idf tokenaizer  | 0.99  |0.99|
 
 **By considering overfitting and stable performance of pre-trained model I am selecting fasttext bidirectional LSTM
 model as the best model.**

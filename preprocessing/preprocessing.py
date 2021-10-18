@@ -49,6 +49,7 @@ class PreProcessor():
        data = data[['cleanText','category']]
        data_test = data_test[['cleanText','category']]
 
+       # remove unnecessary punctuation & stopwords
        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
 

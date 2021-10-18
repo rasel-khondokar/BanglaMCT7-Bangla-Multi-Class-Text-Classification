@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 from evaluation.performance import Evaluator
 from preprocessing.preprocessing import PreProcessor
 from settings import DIR_RESOURCES, DIR_IMAGES_EDA, DIR_IMAGES_HISTORY, DIR_BASE, MODEL_FASTTEXT_SIMPLE, \
-    MODEL_FASTTEXT_BIDIRECTIONAL_LSTM
+    MODEL_FASTTEXT_DEEP_ANN
 
 
 class myCallback(keras.callbacks.Callback):
@@ -130,7 +130,7 @@ class ModelTrainer():
             tf.keras.layers.Dense(num_classes, activation='softmax')])
         return model
 
-    def model_fasttext_bi_lstm(self, num_classes, embedding_layer):
+    def model_fasttext_deep_ann(self, num_classes, embedding_layer):
         model = tf.keras.Sequential([
             tf.keras.layers.Input(shape=[], dtype=tf.string),
             embedding_layer,
@@ -178,8 +178,8 @@ class ModelTrainer():
 
         if name == f'{MODEL_FASTTEXT_SIMPLE}_fasttext':
             model = self.model_fasttext_simple(num_classes, embedding_layer)
-        elif name == f'{MODEL_FASTTEXT_BIDIRECTIONAL_LSTM}_fasttext':
-            model = self.model_fasttext_bi_lstm(num_classes, embedding_layer)
+        elif name == f'{MODEL_FASTTEXT_DEEP_ANN}_fasttext':
+            model = self.model_fasttext_deep_ann(num_classes, embedding_layer)
 
         print(model.summary())
         model.compile(loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),optimizer="adam", metrics=['accuracy'])
