@@ -1,20 +1,27 @@
 # BanglaMCT7 : Bangla-Multi Class Text Classification
-####[Click to download the dataset](https://www.kaggle.com/gakowsher/banglamct7-bangla-multiclass-text-dataset-7-tags/code)
+#### [Click to download the dataset](https://www.kaggle.com/gakowsher/banglamct7-bangla-multiclass-text-dataset-7-tags/code)
 
-##Installation and training
-####Installing, Downloading Prerequisites and Traning
+## Installation and training
+
+#### Installing, Downloading Prerequisites and Traning
+
 ```sh
 . install_and_train.sh
 ```
-####Only Traning
+#### Only Traning
+
 ```sh
 python __main__.py
 ```
-##EDA
+
+## EDA
+
 ![class distribution](REPORT/IMAGES/EDA/class_distribution.png?raw=true)
 ![summary](REPORT/IMAGES/EDA/data_summary.png?raw=true)
 ![document length distribution](REPORT/IMAGES/EDA/document_length_distribution.png?raw=true)
-##Trained models accuracy
+
+## Trained models accuracy
+
 <!-- TABLE_GENERATE_START -->
 
 | Model  | Train | Test |
@@ -27,13 +34,17 @@ model as the best model.**
 
 <!-- TABLE_GENERATE_END -->
 
+## Best Model
 
-##Best Model
-####fasttext bi lstm model
-####Model history
+#### fasttext bi lstm model
+
+#### Model history
+
 ![accuracy](REPORT/IMAGES/HISTORY/bi_gru_keras_tokenaizer_accuracy.png?raw=true)
 ![loss](REPORT/IMAGES/HISTORY/bi_gru_keras_tokenaizer_loss.png?raw=true)
-####Classification Report - train data
+
+#### Classification Report - train data
+
               precision    recall  f1-score   support
 
            0       0.91      0.88      0.90     14467
@@ -47,7 +58,9 @@ model as the best model.**
       accuracy                         0.92     98386
       macro avg    0.92      0.92      0.92     98386
       weighted avg 0.92      0.92      0.92     98386
-####Classification Report - test data
+
+#### Classification Report - test data
+
               precision    recall  f1-score   support
 
            0       0.91      0.88      0.90     14467
