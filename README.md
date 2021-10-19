@@ -1,6 +1,6 @@
 # BanglaMCT7 : Bangla Multi-Class Text Classification
 #### [Click to download the dataset](https://www.kaggle.com/gakowsher/banglamct7-bangla-multiclass-text-dataset-7-tags/code)
-#### [Click to download trained models](https://www.kaggle.com/gakowsher/banglamct7-bangla-multiclass-text-dataset-7-tags/code)
+#### [Click to download trained models](https://drive.google.com/file/d/16BgSgZO1JMRCPo7_uZXxXmPaXwDmiVoc/view?usp=sharing)
 
 ## Installation and training
 
@@ -141,3 +141,9 @@ model as the best model.**
         accuracy                           0.93     98386
        macro avg       0.92      0.92      0.92     98386
     weighted avg       0.93      0.93      0.93     98386
+
+## Flask Web APP
+
+**_app.py_**
+
+![ui](REPORT/IMAGES/app.png?raw=true)

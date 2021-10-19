@@ -74,6 +74,14 @@ class PreProcessor():
         class_names = le.classes_
         return labels, class_names
 
+    def decode_category(self, encoded_category):
+        with open(DIR_RESOURCES+'/label_encoder.pickle', 'rb') as handle:
+            le = pickle.load(handle)
+        decoded_labels = le.inverse_transform(encoded_category)
+        labels = np.array(decoded_labels)
+        class_names = le.classes_
+        return labels, class_names
+
     def handle_low_length_doc(self, data):
         # Calculate the Length of each Document
         data['Length'] = data.cleaned.apply(lambda x: len(x.split()))
