@@ -216,5 +216,5 @@ def main_prothom_alo():
     scraper.scrape()
     driver_dcra.quit()
 
-if __name__ == "__main__":
-    main_prothom_alo()
+# if __name__ == "__main__":
+#     main_prothom_alo()
