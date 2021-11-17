@@ -119,9 +119,9 @@ class DcraScraper():
                         # open new tab
                         driver.execute_script(f"window.open('{link}', 'new_window')")
                         # Switch to the tab
-                        time.sleep(5)
+                        time.sleep(2)
                         driver.switch_to.window(driver.window_handles[1])
-                        time.sleep(5)
+                        time.sleep(2)
 
                         # WebDriverWait(driver, 20).until(
                         #     EC.presence_of_element_located((By.CSS_SELECTOR, '.businessCard--businessName')))
@@ -143,9 +143,9 @@ class DcraScraper():
                         add_to_existing_json(data_dict, data_file)
 
                         # Back to the main window
-                        time.sleep(5)
+                        time.sleep(2)
                         driver.switch_to.window(driver.window_handles[0])
-                        time.sleep(5)
+                        time.sleep(2)
 
 
     def scroll_to_element(self, driver, el: WebElement):
