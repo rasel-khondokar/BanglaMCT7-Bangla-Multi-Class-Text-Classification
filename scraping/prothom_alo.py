@@ -112,7 +112,7 @@ class DcraScraper():
 
                 if link:
 
-                    if url not in existing:
+                    if link not in existing:
 
                         data_dict = {'url': link, 'title': url.text, 'category': category}
 
@@ -165,6 +165,8 @@ class DcraScraper():
             existing = [data['url'] for data in existing]
         except:
             existing = []
+
+        print(len(existing))
 
         SCRAPING_STATUS = True
         for category in categories:
