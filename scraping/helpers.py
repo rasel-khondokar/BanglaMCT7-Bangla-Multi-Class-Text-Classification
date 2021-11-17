@@ -2,12 +2,15 @@ import json
 import os
 import time
 
+from get_chrome_driver import GetChromeDriver
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 # Request to URL using Chrome driver
-def get_driver(url, headless=True, chrome_version=False):
+from configs import CHROMEDRIVER_PATH
 
+
+def get_driver(url, headless=True, chrome_version=False):
     option = Options()
     option.add_argument("--disable-notifications")
     option.add_argument('--no-sandbox')
@@ -16,16 +19,26 @@ def get_driver(url, headless=True, chrome_version=False):
     if headless:
         option.add_argument("--headless")
 
-    if chrome_version:
-        print(f'Chrome version : {chrome_version}')
-        # driver_path = chrome_version.split('.')[0]
-        driver_path = 'chromedriver_linux64'
-        dir_path = os.path.dirname(os.path.realpath(__file__))+'/'+driver_path+'/chromedriver'
-        driver = webdriver.Chrome(dir_path, chrome_options=option)
-    else:
-        driver = webdriver.Chrome(chrome_options=option)
+    chrome_dir = os.path.dirname(os.path.realpath(__file__))+'/'+CHROMEDRIVER_PATH
+    make_dir_if_not_exists(chrome_dir)
+    chrome_file_path = chrome_dir + '/chromedriver'
 
-    driver.get(url)
+    try:
+        driver = webdriver.Chrome(chrome_file_path, chrome_options=option)
+        driver.get(url)
+    except Exception as e:
+        print('Selenium session is not Created !')
+
+        if os.path.exists(chrome_file_path):
+            os.remove(chrome_file_path)
+            print(f'Removed {chrome_file_path} file!')
+
+        download_driver = GetChromeDriver()
+        download_driver.auto_download(extract=True, output_path=chrome_dir)
+        print(f'Downloaded chrome driver for the chrome version {download_driver.matching_version()}!')
+        driver = webdriver.Chrome(chrome_file_path, chrome_options=option)
+        driver.get(url)
+
     driver.maximize_window()
     return driver
 
