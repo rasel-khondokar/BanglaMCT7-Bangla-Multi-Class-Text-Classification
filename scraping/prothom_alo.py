@@ -16,94 +16,6 @@ class DcraScraper():
     def __init__(self, driver):
         self.driver = driver
 
-    def scrape_from_url(self, driver, url):
-        print(f'Retrieving {url}')
-        driver.get(url)
-        time.sleep(PUSH_TIME_FOR_REQUEST_TO_URL)
-        return driver
-
-
-    def get_elelment_by_text(self, element, text):
-        element = element.find_element_by_xpath(f"//*[contains(text(), '{text}')]")
-        return element
-
-    def get_data_from_texts_parent_element(self, driver, text):
-        element = self.get_elelment_by_text(driver, text)
-        element = element.find_element_by_xpath("..")
-        element_text = element.text
-        element_text = element_text.replace(text, '')
-        return element_text.strip()
-
-    def add_data_from_company_detail(self, data):
-
-        company =  data['company_name'].replace(' ', '%20')
-        license_number =  data['license_number']
-
-        url = f'https://govservices.dcra.dc.gov/contractorratingsystem/ProfessionalProjects?prof={company}&type=General-Contractor&cnumber={license_number}'
-
-        driver = self.driver
-        time.sleep(DELAY_LONG)
-        # open new tab
-        driver.execute_script(f"window.open('{url}', 'new_window')")
-        # Switch to the tab
-        driver.switch_to.window(driver.window_handles[1])
-        time.sleep(DELAY_LONG)
-        try:
-            # Wait untill page is loaded
-            WebDriverWait(driver, 20).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '.row:nth-child(5) span')))
-            try:
-                data['business_address]'] = self.get_data_from_texts_parent_element(driver, 'Business Address:')
-            except Exception as e:
-                print(e)
-            try:
-                data['business_phone'] = self.get_data_from_texts_parent_element(driver, 'Business Phone:')
-            except Exception as e:
-                print(e)
-        except Exception as e:
-            print(e)
-
-        # Back to the main window
-        time.sleep(DELAY_LONG)
-        driver.switch_to_window(driver.window_handles[0])
-        time.sleep(DELAY_LONG)
-
-        return data
-
-
-    def get_posts(self, driver):
-
-        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#actorProjectScores .modal-content')))
-        posts = driver.find_elements_by_css_selector('#actorProjectScores .modal-content')
-
-        post_data = []
-        for post in posts:
-            time.sleep(DELAY_LONG)
-            data = {}
-            WebDriverWait(driver, 20).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, 'h3.text-uppercase')))
-            company = post.find_element_by_css_selector('h3.text-uppercase')
-            data['company_name'] = company.text.strip()
-            if 'fire' in data['company_name'].lower() or 'safety' in data['company_name'].lower():
-                continue
-
-            data['license_number'] = post.find_element_by_css_selector('.lblprofessional:nth-child(3) span').text.strip().replace('License Number: ', '')
-            data['stop_work_order'] = post.find_element_by_css_selector('.lblprofessional:nth-child(7)').text.strip().replace('Stop Work Order(s): ', '')
-            data['project_count'] = post.find_element_by_css_selector('br~ .lblprofessional+ .lblprofessional span').text.strip().replace('Project Count: ', '')
-            data['business_email'] = post.find_element_by_css_selector('.lblprofessional:nth-child(5) span').text.strip().replace('Business Email: ', '')
-            self.add_data_from_company_detail(data)
-            post_data.append(data)
-
-        return post_data
-
-    def get_from_next_page(self, i, driver, last_page):
-        posts = self.get_posts(driver)
-        if i != last_page:
-            time.sleep(20)
-            next_page = driver.find_element_by_xpath(f"//div[@class='Pager']/a[@page='{i + 1}']")
-            next_page.click()
-        return posts
-
     def get_posts_posts_page(self, driver, urls, existing, category, data_file):
         for url in urls:
             # print(url.get_attribute('innerHTML'))
@@ -140,7 +52,10 @@ class DcraScraper():
                         except Exception as e:
                             print(e)
 
-                        add_to_existing_json(data_dict, data_file)
+                        try:
+                            add_to_existing_json(data_dict, data_file)
+                        except:
+                            pass
 
                         # Back to the main window
                         time.sleep(2)
@@ -152,13 +67,12 @@ class DcraScraper():
         driver.execute_script("arguments[0].scrollIntoView(true);", el)
         time.sleep(3)
 
-    def scrape(self):
-        data_file =  f'{BASE_DIR}/DATASET/prothomalo.json'
+    def scrape(self, categories, category):
+        data_file =  f'{BASE_DIR}/DATASET/prothomalo_{category}.json'
         driver = self.driver
         main_site = 'https://www.prothomalo.com/'
-        categories = {'sports':'sports', 'international':'world', 'economy':'business', 'entertainment':'entertainment',
-                      'technology':'education/science-tech', 'politics':'politics'}
-
+        # categories = {'sports':'sports', 'international':'world', 'economy':'business', 'entertainment':'entertainment',
+        #               'technology':'education/science-tech', 'politics':'politics'}
         try:
             with open(data_file, "r") as the_file:
                 existing = json.load(the_file)
@@ -168,54 +82,55 @@ class DcraScraper():
 
         print(len(existing))
 
+        driver.get(main_site + categories[category])
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.stories-set')))
+
         SCRAPING_STATUS = True
-        for category in categories:
+        while SCRAPING_STATUS:
+            try:
 
-            driver.get(main_site + categories[category])
-            WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.stories-set')))
+                headings = driver.find_elements_by_css_selector('.bn-story-card h2')
+                urls = []
+                for heading in headings:
+                    urls.append( heading.find_element_by_xpath('..') )
 
-            while SCRAPING_STATUS:
+                # Try to set last date as first date to check only new jobs
                 try:
+                    first_index = last_date_index
+                except:
+                    first_index = 0
+                last_date_index = len(urls) - 1
 
-                    headings = driver.find_elements_by_css_selector('.bn-story-card h2')
-                    urls = []
-                    for heading in headings:
-                        urls.append( heading.find_element_by_xpath('..') )
+                urls = urls[first_index:last_date_index]
 
-                    # Try to set last date as first date to check only new jobs
-                    try:
-                        first_index = last_date_index
-                    except:
-                        first_index = 0
-                    last_date_index = len(urls) - 1
-
-                    urls = urls[first_index:last_date_index]
-
+                try:
                     self.get_posts_posts_page(driver, urls, existing, category, data_file)
+                except:
+                    pass
 
-                    # load more
-                    try:
-                        load_more = driver.find_element_by_css_selector('.load-more-content')
-                        self.scroll_to_element(driver, load_more)
+                # load more
+                try:
+                    load_more = driver.find_element_by_css_selector('.load-more-content')
+                    self.scroll_to_element(driver, load_more)
 
-                        javascript = "document.querySelector('.load-more-content').click();"
-                        driver.execute_script(javascript)
-                        time.sleep(10)
-                    except Exception as e:
-                        print(e)
-                    print(0)
+                    javascript = "document.querySelector('.load-more-content').click();"
+                    driver.execute_script(javascript)
+                    time.sleep(10)
                 except Exception as e:
                     print(e)
-                    SCRAPING_STATUS = False
-                    break
+                print(0)
+            except Exception as e:
+                print(e)
+                SCRAPING_STATUS = False
+                break
 
-def main_prothom_alo():
+def main_prothom_alo(categories, category):
     # chromedriver_autoinstaller.install(True)
     time.sleep(10)
     chrome_version = chromedriver_autoinstaller.get_chrome_version()
-    driver_dcra = get_driver('https://www.prothomalo.com/', chrome_version = chrome_version, headless=False)
+    driver_dcra = get_driver('https://www.prothomalo.com/', chrome_version = chrome_version, headless=True)
     scraper = DcraScraper(driver_dcra)
-    scraper.scrape()
+    scraper.scrape(categories, category)
     driver_dcra.quit()
 
 # if __name__ == "__main__":

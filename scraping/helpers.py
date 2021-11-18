@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 # Request to URL using Chrome driver
-from configs import CHROMEDRIVER_PATH
+from configs import CHROMEDRIVER_PATH, BASE_DIR
 
 
 def get_driver(url, headless=True, chrome_version=False):
@@ -19,7 +19,7 @@ def get_driver(url, headless=True, chrome_version=False):
     if headless:
         option.add_argument("--headless")
 
-    chrome_dir = os.path.dirname(os.path.realpath(__file__))+'/'+CHROMEDRIVER_PATH
+    chrome_dir = BASE_DIR+'/'+CHROMEDRIVER_PATH
     make_dir_if_not_exists(chrome_dir)
     chrome_file_path = chrome_dir + '/chromedriver'
 
