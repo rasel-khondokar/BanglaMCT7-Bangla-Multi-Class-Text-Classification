@@ -14,7 +14,7 @@ def main():
 
     # get cleaned train and test data
     preprocessor = PreProcessor()
-    data, data_test = preprocessor.read_data()
+    data, data_test = preprocessor.read_collected_data()
 
     # exploratory data analysis
     eda = EDA(data)

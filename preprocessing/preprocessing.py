@@ -1,13 +1,18 @@
+import os
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import pandas as pd
 import re
 import pickle
 import dill
+from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.preprocessing.text import Tokenizer
+
+from configs import BASE_DIR
 from settings import DIR_DATASET, DIR_RESOURCES
 
 class PreProcessor():
@@ -56,6 +61,55 @@ class PreProcessor():
        self.data, self.data_test = data, data_test
 
        return data, data_test
+
+    def read_collected_data(self):
+        dataset = pd.DataFrame()
+        dataset_dir = f'{BASE_DIR}/DATASET/'
+        files = os.listdir(dataset_dir)
+        for file in files:
+            if '.json' in file:
+                try:
+                    data_file = dataset_dir + file
+                    df = pd.read_json(data_file)
+                    dataset = dataset.append(df, ignore_index=True)
+                except:
+                    print(f"error during reading {file}")
+
+        dataset.rename(columns={"raw_text": "cleanText"}, inplace=True)
+
+        data, data_test = train_test_split(dataset, test_size=.2)
+
+        # data, data_test = data.sample(100), data_test.sample(100)
+
+        data, data_test = data.reset_index(), data_test.reset_index()
+
+        # Remove null
+        print(f'Before removing null : {len(data)}')
+        print(f'Before removing null : {len(data_test)}')
+        data.dropna(inplace=True)
+        data_test.dropna(inplace=True)
+        print(f'After removing null : {len(data)}')
+        print(f'After removing null : {len(data_test)}')
+
+        # Remove duplicates
+        print(f'Before removing duplicates : {len(data)}')
+        print(f'Before removing duplicates : {len(data_test)}')
+        data = data.drop_duplicates(subset=['url'])
+        data_test = data_test.drop_duplicates(subset=['url'])
+        print(f'After removing duplicates : {len(data)}')
+        print(f'After removing duplicates : {len(data_test)}')
+
+        data = data[['cleanText', 'category']]
+        data_test = data_test[['cleanText', 'category']]
+
+        # remove unnecessary punctuation & stopwords
+        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+
+        self.data, self.data_test = data, data_test
+
+        return data, data_test
+
 
     def vectorize_tfidf(self, article, gram, name):
         tfidf = TfidfVectorizer(ngram_range=gram, use_idf=True, tokenizer=lambda x: x.split())

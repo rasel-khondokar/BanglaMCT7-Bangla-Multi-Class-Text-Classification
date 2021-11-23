@@ -25,6 +25,10 @@ class Evaluator():
         else:
             y_pred = predictions
 
+        preprocessor = PreProcessor()
+        y, class_names = preprocessor.decode_category(y)
+        y_pred, class_names = preprocessor.decode_category(y_pred)
+
         cm = confusion_matrix(y, y_pred)
         report = classification_report(y, y_pred)
         print(report)
