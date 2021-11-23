@@ -1,4 +1,5 @@
 import os
+import time
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
@@ -71,6 +72,7 @@ class PreProcessor():
                 try:
                     data_file = dataset_dir + file
                     df = pd.read_json(data_file)
+                    time.sleep(10)
                     dataset = dataset.append(df, ignore_index=True)
                 except:
                     print(f"error during reading {file}")
