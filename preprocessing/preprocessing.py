@@ -81,6 +81,7 @@ class PreProcessor():
         dataset_dir = f'{BASE_DIR}/DATASET/'
         file = f'{dataset_dir}collected_data.csv'
         dataset = pd.read_csv(file)
+        # dataset = dataset.sample(100)
         data, data_test = train_test_split(dataset, test_size=.2)
 
         # data, data_test = data.sample(100), data_test.sample(100)
