@@ -19,29 +19,36 @@ python __main__.py
 
 **Train data**
 
-Before removing null : 98883 
+Before removing null : 95134 
 
-After removing null : 98883
+After removing null : 85800
 
-Before removing duplicates : 98883
+Before removing duplicates : 85800
 
-After removing duplicates : 98426
+After removing duplicates : 70028
 
-1893 Documents removed which length less than equal 20
+837 Documents removed which length less than equal 20
+
+Total Remaining Documents: 69191
 
 **Test data**
 
-Before removing null : 98884
+Before removing null : 23784
 
-After removing null : 98884
+After removing null : 21523
 
-Before removing duplicates : 98884
+Before removing duplicates : 21523
 
-After removing duplicates : 98386
+After removing duplicates : 17806
 
 
 
 ## EDA
+
+Maximum Length of a Document: 4442 
+
+Average Length of a Document: 223
+
 
 EDA images saved to :  _`REPORT/IMAGES/EDA`_
 
@@ -59,11 +66,11 @@ Trained models performence report saved to :  _`REPORT/PERFORMENCE`_
 
 | Model  | Tokenaizer | Train | Test |
 | --- | ---- |---- |---- |
-| BIDIRECTIONAL GRU  | keras tokenaizer  | 0.98  | 0.93|
-| CNN & BIDIRECTIONAL LSTM  | keras tokenaizer  | 0.95  |0.93|
-| DEEP ANN  | fasttest tokenaizer  | 0.96  | 0.92|
-| SIMPLE ANN  | fasttest tokenaizer  | 0.94  |0.93|
-| RANDOM FOREST  | tf-idf tokenaizer  | 0.97  |0.91|
+| BIDIRECTIONAL GRU  | keras tokenaizer  | 0.98  | 0.94|
+| CNN & BIDIRECTIONAL LSTM  | keras tokenaizer  | 0.98  |0.94|
+| DEEP ANN  | fasttest tokenaizer  | 0.97  | 0.95|
+| SIMPLE ANN  | fasttest tokenaizer  | 0.96  |0.95|
+| RANDOM FOREST  | tf-idf tokenaizer  | 0.93  |0.91|
 
 **By considering overfitting and stable performance of pre-trained model I am selecting SIMPLE ANN (2 dense layers) with fasttext tokenaizer
 model as the best model.**
@@ -91,56 +98,55 @@ model as the best model.**
 #### Report - train data
 
     ___________________ confusion_matrix _____________________
-    [[12795   115    61   133    23   895   390]
-     [   67 11655    74    11    20   513   136]
-     [   17    36 14526   122    57   175    40]
-     [  133    22   250 14532    37   233   331]
-     [   10     3    71    44 15507    26     8]
-     [  439   301   237   152    26 14117    88]
-     [  294    86    50   165    14   105  9284]]
-
-
+    [[ 9708    71    19   173    67    12   234]
+     [   96  7616    20    88    81     3   294]
+     [   36    23 10220    79    49    23    25]
+     [  130    34    84  9213    32    22   154]
+     [   62    59    20    31 10862     8     9]
+     [   22     8    57    69    12 14356    10]
+     [  259    96    42   298    14    10  5118]]
+    
+    
     ___________________ classification report _____________________
-                  precision    recall  f1-score   support
+                   precision    recall  f1-score   support
     
-               0       0.93      0.89      0.91     14412
-               1       0.95      0.93      0.94     12476
-               2       0.95      0.97      0.96     14973
-               3       0.96      0.94      0.95     15538
-               4       0.99      0.99      0.99     15669
-               5       0.88      0.92      0.90     15360
-               6       0.90      0.93      0.92      9998
+          economy       0.94      0.94      0.94     10284
+        education       0.96      0.93      0.95      8198
+    entertainment       0.98      0.98      0.98     10455
+    international       0.93      0.95      0.94      9669
+         politics       0.98      0.98      0.98     11051
+           sports       0.99      0.99      0.99     14534
+       technology       0.88      0.88      0.88      5837
     
-        accuracy                           0.94     98426
-       macro avg       0.94      0.94      0.94     98426
-    weighted avg       0.94      0.94      0.94     98426
-
+         accuracy                           0.96     70028
+        macro avg       0.95      0.95      0.95     70028
+     weighted avg       0.96      0.96      0.96     70028
 #### Report - test data
-
+    
     ___________________ confusion_matrix _____________________
-    [[12680   163    67   160    28   918   451]
-     [   82 11563   112    23    18   634   183]
-     [   21    62 14380   168    79   227    70]
-     [  165    39   269 14081    65   304   381]
-     [    7    19    99    63 15633    42    18]
-     [  485   463   267   160    34 13668   104]
-     [  386   112    61   232    19   118  9003]]
-
-
+    [[2582   21    5   40   27    4   70]
+     [  24 1898    6   24   25    3  144]
+     [  10    9 2444   31   21   11   16]
+     [  43   13   28 2307    7    6   48]
+     [  16   11    8    5 2768    6    5]
+     [   7    2   18   12    8 3629    2]
+     [  71   50   12   80    8    2 1219]]
+    
+    
     ___________________ classification report _____________________
-                  precision    recall  f1-score   support
+                   precision    recall  f1-score   support
     
-               0       0.92      0.88      0.90     14467
-               1       0.93      0.92      0.92     12615
-               2       0.94      0.96      0.95     15007
-               3       0.95      0.92      0.93     15304
-               4       0.98      0.98      0.98     15881
-               5       0.86      0.90      0.88     15181
-               6       0.88      0.91      0.89      9931
+          economy       0.94      0.94      0.94      2749
+        education       0.95      0.89      0.92      2124
+    entertainment       0.97      0.96      0.97      2542
+    international       0.92      0.94      0.93      2452
+         politics       0.97      0.98      0.97      2819
+           sports       0.99      0.99      0.99      3678
+       technology       0.81      0.85      0.83      1442
     
-        accuracy                           0.93     98386
-       macro avg       0.92      0.92      0.92     98386
-    weighted avg       0.93      0.93      0.93     98386
+         accuracy                           0.95     17806
+        macro avg       0.94      0.94      0.94     17806
+     weighted avg       0.95      0.95      0.95     17806
 
 ## Flask Web APP
 
