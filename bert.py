@@ -22,7 +22,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 from preprocessing.preprocessing import PreProcessor
 from settings import DIR_IMAGES_EDA, DIR_RESOURCES, DIR_PERFORMENCE_REPORT
 
-MAX_LEN = 512 # max sequences length
+MAX_LEN = 256 # max sequences length
 batch_size = 32
 epochs = 100
 
