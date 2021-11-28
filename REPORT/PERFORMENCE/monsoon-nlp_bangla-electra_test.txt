@@ -1,22 +1,24 @@
 ___________________ confusion_matrix _____________________
-[[2 0 0 0 0 0]
- [5 0 0 0 0 0]
- [6 0 0 0 0 0]
- [7 0 0 0 0 0]
- [8 0 0 0 0 0]
- [6 0 0 0 0 0]]
+[[2524   20   37   28   21    7   55]
+ [  33 1883   17   15   27    1  157]
+ [   9    1 2500   13    6   11   12]
+ [  42   21  106 2127   15   34  101]
+ [  21    8   15    2 2824    2    0]
+ [   5    1   22    9    7 3649    2]
+ [  74  113   54   24    4    4 1209]]
 
 
 ___________________ classification report _____________________
                precision    recall  f1-score   support
 
-      economy       0.06      1.00      0.11         2
-    education       0.00      0.00      0.00         5
-entertainment       0.00      0.00      0.00         6
-international       0.00      0.00      0.00         7
-     politics       0.00      0.00      0.00         8
-   technology       0.00      0.00      0.00         6
+      economy       0.93      0.94      0.93      2692
+    education       0.92      0.88      0.90      2133
+entertainment       0.91      0.98      0.94      2552
+international       0.96      0.87      0.91      2446
+     politics       0.97      0.98      0.98      2872
+       sports       0.98      0.99      0.99      3695
+   technology       0.79      0.82      0.80      1482
 
-     accuracy                           0.06        34
-    macro avg       0.01      0.17      0.02        34
- weighted avg       0.00      0.06      0.01        34
+     accuracy                           0.94     17872
+    macro avg       0.92      0.92      0.92     17872
+ weighted avg       0.94      0.94      0.94     17872

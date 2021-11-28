@@ -309,7 +309,7 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
     run_test(model, device, df, is_test=False)
 
 
-MODEL_PRETRAINEDS = ['monsoon-nlp/bangla-electra', 'sagorsarker/bangla-bert-base', 'csebuetnlp-banglabert', 'bert-base-multilingual-cased']
+MODEL_PRETRAINEDS = ['csebuetnlp/banglabert']
 preprocessor = PreProcessor()
 df, df_test = preprocessor.read_collected_data()
 
