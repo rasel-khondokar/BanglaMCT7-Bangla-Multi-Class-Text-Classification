@@ -71,6 +71,10 @@ Trained models performence report saved to :  _`REPORT/PERFORMENCE`_
 | DEEP ANN  | fasttest tokenaizer  | 0.97  | 0.95|
 | SIMPLE ANN  | fasttest tokenaizer  | 0.96  |0.95|
 | RANDOM FOREST  | tf-idf tokenaizer  | 0.93  |0.91|
+| bert-base-multilingual-cased  | bert-base-multilingual-cased  | 1.00  |0.91|
+| csebuetnlp/banglabert  | csebuetnlp/banglabert  | 0.99  |0.93|
+| monsoon-nlp/bangla-electra  | monsoon-nlp/bangla-electra  | 1.00  |0.94|
+| sagorsarker/bangla-bert-base  | sagorsarker/bangla-bert-base  | 1.00  |0.93|
 
 **By considering overfitting and stable performance of pre-trained model I am selecting SIMPLE ANN (2 dense layers) with fasttext tokenaizer
 model as the best model.**
