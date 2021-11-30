@@ -309,7 +309,7 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
     run_test(model, device, df, is_test=False)
 
 
-MODEL_PRETRAINEDS = ['csebuetnlp/banglabert']
+MODEL_PRETRAINEDS = ['bert-base-multilingual-cased','csebuetnlp/banglabert', 'monsoon-nlp/bangla-electra', 'sagorsarker/bangla-bert-base']
 preprocessor = PreProcessor()
 df, df_test = preprocessor.read_collected_data()
 
@@ -317,7 +317,15 @@ for model_pretrained in MODEL_PRETRAINEDS:
     try:
         MAX_LEN = 128  # max sequences length
         batch_size = 32
-        epochs = 35
+        if model_pretrained == 'csebuetnlp/banglabert':
+            epochs = 5
+        elif model_pretrained == 'sagorsarker/bangla-bert-base':
+            epochs = 3
+        if model_pretrained == 'monsoon-nlp/bangla-electra':
+            epochs = 4
+        elif model_pretrained == 'bert-base-multilingual-cased':
+            epochs = 4
+
         train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs)
     except Exception as e:
         print(model_pretrained)
