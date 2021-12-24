@@ -93,7 +93,6 @@ class DataVisualizer():
         ax.set_title('Data Statistics')
         class_names = class_label
         ax.xaxis.set_ticklabels(class_names, rotation=45)
-        make_dir_if_not_exists(DIR_IMAGES_EDA)
         file_path = DIR_IMAGES_EDA + '/data_summary.png'
         plt.savefig(file_path)
         plt.close()
