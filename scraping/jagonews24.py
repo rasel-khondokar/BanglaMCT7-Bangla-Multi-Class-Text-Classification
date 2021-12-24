@@ -128,7 +128,7 @@ def main_jagonews24(categories, category):
     # chromedriver_autoinstaller.install(True)
     time.sleep(10)
     chrome_version = chromedriver_autoinstaller.get_chrome_version()
-    driver_dcra = get_driver('https://www.jagonews24.com/', chrome_version = chrome_version, headless=True)
+    driver_dcra = get_driver('https://www.jagonews24.com/', chrome_version = chrome_version, headless=False)
     scraper = DcraScraper(driver_dcra)
     scraper.scrape(categories, category)
     driver_dcra.quit()
