@@ -48,7 +48,7 @@ def scrape_jagonews24():
    categories = {'sports':'sports', 'international':'international', 'economy':'economy', 'entertainment':'entertainment',
                          'technology':'technology', 'politics':'politics', 'education':'education'}
 
-   # categories = {'sports':'sports'}
+   categories = {'sports':'sports'}
 
    for category in categories:
       time.sleep(3)

@@ -3,6 +3,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+
+from scraping.helpers import make_dir_if_not_exists
 from settings import DIR_IMAGES_EDA
 
 class DataVisualizer():
@@ -90,7 +92,7 @@ class DataVisualizer():
         ax.set_xlabel('Class Names')
         ax.set_title('Data Statistics')
         class_names = class_label
-        ax.xaxis.set_ticklabels(class_names, rotation=45);
+        ax.xaxis.set_ticklabels(class_names, rotation=45)
         file_path = DIR_IMAGES_EDA + '/data_summary.png'
         plt.savefig(file_path)
         plt.close()
