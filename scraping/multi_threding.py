@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 
 from scraping.banglatribune import main_banglatribune
+from scraping.ittefaq import main_ittefaq
 from scraping.jagonews24 import main_jagonews24
 from scraping.prothom_alo import main_prothom_alo
 
@@ -52,6 +53,19 @@ def scrape_jagonews24():
    for category in categories:
       time.sleep(3)
       thread = ScraperThread(categories, category, main_jagonews24)
+      thread.start()
+
+def scrape_ittefaqe():
+   categories = {'sports':'sports', 'international':'world-news', 'economy':'business', 'entertainment':'entertainment',
+                         'technology':'tech', 'politics':'politics', 'education':'education'}
+
+   # categories = {'sports':'sports'}
+   for cat in categories:
+      categories[cat] = cat + '?page='
+
+   for category in categories:
+      time.sleep(5)
+      thread = ScraperThread(categories, category, main_ittefaq)
       thread.start()
 
 
