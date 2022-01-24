@@ -48,4 +48,5 @@ dataset.to_csv(file, index=False)
 
 df =  pd.read_csv(file)
 print(len(df))
+print(f"Duplicated :{df.duplicated('url').sum()}")
 

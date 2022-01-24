@@ -70,6 +70,6 @@ def add_to_existing_json(data, file):
     existing.append(data)
 
     with open(file, "w") as the_file:
-        json.dump(existing, the_file, indent=4)
+        json.dump(existing, the_file, indent=4, ensure_ascii=False)
 
     print(f'Saved to {file}')

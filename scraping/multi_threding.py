@@ -5,6 +5,7 @@ from datetime import datetime
 from scraping.banglatribune import main_banglatribune
 from scraping.jagonews24 import main_jagonews24
 from scraping.prothom_alo import main_prothom_alo
+from scraping.samakal import main_samakal
 
 
 class ScraperThread (threading.Thread):
@@ -52,6 +53,17 @@ def scrape_jagonews24():
    for category in categories:
       time.sleep(3)
       thread = ScraperThread(categories, category, main_jagonews24)
+      thread.start()
+
+def scrape_samakal():
+   categories = {'international':'international', 'economy':'economics',
+                         'technology':'technology', 'education':'education'}
+
+   # categories = {'technology':'technology'}
+
+   for category in categories:
+      time.sleep(3)
+      thread = ScraperThread(categories, category, main_samakal)
       thread.start()
 
 
