@@ -29,4 +29,5 @@ duplicated = df.duplicated('url').sum()
 print(f"Total :{total}")
 print(f"Valid :{total-duplicated}")
 print(f"Duplicated :{duplicated}")
+print(df['category'].value_counts())
 
