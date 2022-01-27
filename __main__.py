@@ -16,18 +16,18 @@ from training.training import ModelTrainer
 def main():
     for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
         make_dir_if_not_exists(dir)
-
+    name = 'bard'
     # get cleaned train and test data
     preprocessor = PreProcessor()
-    data, data_test = preprocessor.read_collected_data()
+    data, data_test = preprocessor.read_bard()
 
     # exploratory data analysis
-    eda = EDA(data)
-    eda.visualize()
-    eda.analyze()
+    # eda = EDA(data, name)
+    # eda.visualize()
+    # eda.analyze()
 
     # Train and evaluation
-    trainer = ModelTrainer(data, data_test)
+    trainer = ModelTrainer(name, data, data_test)
     # trainer.train_keras_tokenaizer(MODEL_BIDIRECTIONAL_GRU)
     # trainer.train_keras_tokenaizer(MODEL_CNN_BIDIRECTIONAL_LSTM)
     trainer.train_fasttext(MODEL_FASTTEXT_SIMPLE)

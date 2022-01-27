@@ -63,6 +63,141 @@ class PreProcessor():
 
        return data, data_test
 
+    def read_osac(self):
+        dataset_dir = f'{BASE_DIR}/DATASET/OSAC/category'
+        cat_dirs = os.listdir(dataset_dir)
+        df = pd.DataFrame()
+        target_categories = ['economics', 'education','science_tech', 'politics', 'entertainment', 'international', 'sports']
+        for dir in cat_dirs:
+            if dir in target_categories:
+                dir_cat = f'{dataset_dir}/{dir}/{dir}'
+                files = os.listdir(dir_cat)
+                for i, file in enumerate(files):
+                    with open(f'{dir_cat}/{file}') as f:
+                        text = f.read()
+                        df = df.append({'cleanText':text, 'category':dir},
+                                                 ignore_index=True)
+
+                        # if i>100:
+                        #     break
+
+        df = df[df['category'].isin(target_categories)]
+        data, data_test = train_test_split(df, test_size=.2)
+
+        self.data, self.data_test = data, data_test
+
+        print(f'Before removing null : {len(data)}')
+        print(f'Before removing null : {len(data_test)}')
+        data.dropna(inplace=True)
+        data_test.dropna(inplace=True)
+        print(f'After removing null : {len(data)}')
+        print(f'After removing null : {len(data_test)}')
+
+        # Remove duplicates
+        print(f'Before removing duplicates : {len(data)}')
+        print(f'Before removing duplicates : {len(data_test)}')
+        # data = data.drop_duplicates(subset=['url'])
+        # data_test = data_test.drop_duplicates(subset=['url'])
+        print(f'After removing duplicates : {len(data)}')
+        print(f'After removing duplicates : {len(data_test)}')
+
+        data = data[['cleanText', 'category']]
+        data_test = data_test[['cleanText', 'category']]
+
+        # remove unnecessary punctuation & stopwords
+        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+
+        return data, data_test
+
+    def read_bard(self):
+        dataset_dir = f'{BASE_DIR}/DATASET/BARD'
+        cat_dirs = os.listdir(dataset_dir)
+        df = pd.DataFrame()
+        for dir in cat_dirs:
+            dir_cat = f'{dataset_dir}/{dir}'
+            files = os.listdir(dir_cat)
+            for i, file in enumerate(files):
+                with open(f'{dir_cat}/{file}') as f:
+                    text = f.read()
+                    df = df.append({'cleanText':text, 'category':dir},
+                                             ignore_index=True)
+
+                    # if i>100:
+                    #     break
+
+        df = df[df['category'].isin(['economy', 'entertainment', 'international', 'sports'])]
+        data, data_test = train_test_split(df, test_size=.2)
+
+        self.data, self.data_test = data, data_test
+
+        print(f'Before removing null : {len(data)}')
+        print(f'Before removing null : {len(data_test)}')
+        data.dropna(inplace=True)
+        data_test.dropna(inplace=True)
+        print(f'After removing null : {len(data)}')
+        print(f'After removing null : {len(data_test)}')
+
+        # Remove duplicates
+        print(f'Before removing duplicates : {len(data)}')
+        print(f'Before removing duplicates : {len(data_test)}')
+        # data = data.drop_duplicates(subset=['url'])
+        # data_test = data_test.drop_duplicates(subset=['url'])
+        print(f'After removing duplicates : {len(data)}')
+        print(f'After removing duplicates : {len(data_test)}')
+
+        data = data[['cleanText', 'category']]
+        data_test = data_test[['cleanText', 'category']]
+
+        # remove unnecessary punctuation & stopwords
+        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+
+        return data, data_test
+
+    def read_prothomalo(self):
+        dataset_dir = f'{BASE_DIR}/DATASET/prothomALo'
+        files = os.listdir(dataset_dir)
+        dataset = pd.DataFrame()
+        for file in files:
+            data_file = f'{dataset_dir}/{file}'
+            df = pd.read_csv(data_file)
+            dataset = dataset.append(df, ignore_index=True)
+
+        # dataset = dataset.sample(1000, random_state=0)
+        df = pd.DataFrame()
+        df['cleanText'] = dataset['content']
+        df['category'] = dataset['section']
+        df = df[df['category'].isin(['technology', 'economy', 'education', 'entertainment', 'international', 'sports'])]
+        data, data_test = train_test_split(df, test_size=.2)
+
+        self.data, self.data_test = data, data_test
+
+
+        print(f'Before removing null : {len(data)}')
+        print(f'Before removing null : {len(data_test)}')
+        data.dropna(inplace=True)
+        data_test.dropna(inplace=True)
+        print(f'After removing null : {len(data)}')
+        print(f'After removing null : {len(data_test)}')
+
+        # Remove duplicates
+        print(f'Before removing duplicates : {len(data)}')
+        print(f'Before removing duplicates : {len(data_test)}')
+        # data = data.drop_duplicates(subset=['url'])
+        # data_test = data_test.drop_duplicates(subset=['url'])
+        print(f'After removing duplicates : {len(data)}')
+        print(f'After removing duplicates : {len(data_test)}')
+
+        data = data[['cleanText', 'category']]
+        data_test = data_test[['cleanText', 'category']]
+
+        # remove unnecessary punctuation & stopwords
+        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+
+        return data, data_test
+
     def read_collected_data(self):
         # dataset = pd.DataFrame()
         # dataset_dir = f'{BASE_DIR}/DATASET/'
@@ -125,12 +260,24 @@ class PreProcessor():
             dill.dump(tfidf, handle)
         return x
 
-    def encode_category(self, category_col):
-        with open(DIR_RESOURCES+'/label_encoder.pickle', 'rb') as handle:
-            le = pickle.load(handle)
-        encoded_labels = le.transform(category_col)
-        labels = np.array(encoded_labels)
-        class_names = le.classes_
+    def encode_category(self, category_col, is_test=False, name=''):
+        if is_test:
+            with open(DIR_RESOURCES+f'/{name}label_encoder.pickle', 'rb') as handle:
+                le = pickle.load(handle)
+            encoded_labels = le.transform(category_col)
+            labels = np.array(encoded_labels)
+            class_names = le.classes_
+        else:
+            le = LabelEncoder()
+            le.fit(category_col)
+            encoded_labels = le.transform(category_col)
+            labels = np.array(encoded_labels)
+            class_names = le.classes_
+
+            # save the label encoder into a pickle file
+            with open(DIR_RESOURCES + f'/{name}label_encoder.pickle', 'wb') as handle:
+                pickle.dump(le, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
         return labels, class_names
 
     def decode_category(self, encoded_category):

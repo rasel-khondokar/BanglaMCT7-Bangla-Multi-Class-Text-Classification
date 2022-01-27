@@ -1,4 +1,3 @@
-from preprocessing.preprocessing import PreProcessor
+from scraping.multi_threding import scrape_banglanews24
 
-preprocessor = PreProcessor()
-data, data_test = preprocessor.read_collected_data()
+scrape_banglanews24()

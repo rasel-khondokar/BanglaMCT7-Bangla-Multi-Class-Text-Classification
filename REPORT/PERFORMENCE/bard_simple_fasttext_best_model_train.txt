@@ -1,0 +1,18 @@
+___________________ confusion_matrix _____________________
+[[15082    25   124    10]
+ [   53 24739   167    83]
+ [  121   121 25442    37]
+ [   11    70    56 40551]]
+
+
+___________________ classification report _____________________
+               precision    recall  f1-score   support
+
+      economy       0.99      0.99      0.99     15241
+entertainment       0.99      0.99      0.99     25042
+international       0.99      0.99      0.99     25721
+       sports       1.00      1.00      1.00     40688
+
+     accuracy                           0.99    106692
+    macro avg       0.99      0.99      0.99    106692
+ weighted avg       0.99      0.99      0.99    106692
