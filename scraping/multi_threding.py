@@ -2,6 +2,7 @@ import threading
 import time
 from datetime import datetime
 
+from scraping.banglanews24 import main_banglanews24
 from scraping.banglatribune import main_banglatribune
 from scraping.jagonews24 import main_jagonews24
 from scraping.prothom_alo import main_prothom_alo
@@ -64,6 +65,18 @@ def scrape_samakal():
    for category in categories:
       time.sleep(3)
       thread = ScraperThread(categories, category, main_samakal)
+      thread.start()
+
+
+def scrape_banglanews24():
+   categories = {'international':'category/আন্তর্জাতিক/4', 'economy':'category/অর্থনীতি-ব্যবসা/3',
+                         'technology':'category/তথ্যপ্রযুক্তি/7', 'education':'category/শিক্ষা/20'}
+
+   # categories = {'international':'category/আন্তর্জাতিক/4'}
+
+   for category in categories:
+      time.sleep(3)
+      thread = ScraperThread(categories, category, main_banglanews24)
       thread.start()
 
 
