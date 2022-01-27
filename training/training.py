@@ -24,7 +24,8 @@ class myCallback(keras.callbacks.Callback):
 
 class ModelTrainer():
 
-    def __init__(self, data, data_test):
+    def __init__(self, name, data, data_test):
+        self.name = name
         self.data = data
         self.data_test = data_test
 
@@ -36,7 +37,7 @@ class ModelTrainer():
         plt.ylabel('Accuracy')
         plt.xlabel('Epoch')
         plt.legend(['Train', 'Test'], loc='upper left')
-        plt.savefig(f'{DIR_IMAGES_HISTORY}/{name}_accuracy.png')
+        plt.savefig(f'{DIR_IMAGES_HISTORY}/{self.name}_{name}_accuracy.png')
         plt.close()
         # Plot training & validation loss values
         plt.plot(history.history['loss'])
@@ -45,7 +46,7 @@ class ModelTrainer():
         plt.ylabel('Loss')
         plt.xlabel('Epoch')
         plt.legend(['Train', 'Test'], loc='upper left')
-        plt.savefig(f'{DIR_IMAGES_HISTORY}/{name}_loss.png')
+        plt.savefig(f'{DIR_IMAGES_HISTORY}/{self.name}_{name}_loss.png')
         plt.close()
 
     def model_cnn_bi_lstm(self, num_classes, vocab_size, embedding_dimension, input_length):
@@ -142,9 +143,9 @@ class ModelTrainer():
             tf.keras.layers.Dense(num_classes, activation='softmax')])
         return model
 
-    def train_fasttext(self, name):
+    def train_fasttext(self, model_name):
 
-        name = f'{name}_fasttext'
+        model_name = f'{self.name}_{model_name}_fasttext'
         num_epochs = 100
         batch_size = 256
 
@@ -152,7 +153,7 @@ class ModelTrainer():
         corpus = data['cleaned']
 
         preprocessor = PreProcessor()
-        labels, class_names = preprocessor.encode_category(self.data.category)
+        labels, class_names = preprocessor.encode_category(self.data.category, name=f'{self.name}_')
 
         X_train, X_valid, y_train, y_valid = train_test_split(corpus, labels, train_size=0.7,
                                                               test_size=0.1, random_state=0)
@@ -164,7 +165,7 @@ class ModelTrainer():
 
         num_classes = len(list(np.unique(data['category'])))
 
-        filepath_best_model = f'{DIR_RESOURCES}/{name}_best_model.pkl'
+        filepath_best_model = f'{DIR_RESOURCES}/{model_name}_best_model.pkl'
 
         path_pretrained_model = 'text_module'
         embedding_layer = hub.KerasLayer(path_pretrained_model, trainable=False)
@@ -176,9 +177,9 @@ class ModelTrainer():
         # callback list
         callback_list = [acc_callback, checkpoint]
 
-        if name == f'{MODEL_FASTTEXT_SIMPLE}_fasttext':
+        if model_name == f'{self.name}_{MODEL_FASTTEXT_SIMPLE}_fasttext':
             model = self.model_fasttext_simple(num_classes, embedding_layer)
-        elif name == f'{MODEL_FASTTEXT_DEEP_ANN}_fasttext':
+        elif model_name == f'{self.name}_{MODEL_FASTTEXT_DEEP_ANN}_fasttext':
             model = self.model_fasttext_deep_ann(num_classes, embedding_layer)
 
         print(model.summary())
@@ -192,12 +193,12 @@ class ModelTrainer():
                             callbacks=callback_list)
 
         # save the model
-        model_filepath = f'{DIR_RESOURCES}/{name}_document_categorization.pkl'
+        model_filepath = f'{DIR_RESOURCES}/{model_name}_document_categorization.pkl'
         model.save(model_filepath)
 
-        self.plot_accuracy_and_loss(name, history)
+        self.plot_accuracy_and_loss(model_name, history)
 
-        evaluator = Evaluator(name, data, data_test)
+        evaluator = Evaluator(model_name, data, data_test)
         evaluator.evaluate_dl_model(filepath_best_model)
 
     def train_tfidf_ml(self, name):

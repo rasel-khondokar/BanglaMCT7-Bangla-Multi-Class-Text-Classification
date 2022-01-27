@@ -9,8 +9,9 @@ from settings import DIR_IMAGES_EDA
 
 class DataVisualizer():
 
-    def __init__(self, data):
+    def __init__(self, data, name):
         self.data = data
+        self.name = name
 
     def show_class_distribution(self):
         sns.set(font_scale=1.4)
@@ -19,7 +20,7 @@ class DataVisualizer():
         plt.ylabel("Category", labelpad=12)
         plt.yticks(rotation = 45)
         plt.title("Dataset Distribution", y=1.02)
-        file_path = DIR_IMAGES_EDA + '/class_distribution.png'
+        file_path = DIR_IMAGES_EDA + f'/{self.name}_class_distribution.png'
         plt.savefig(file_path)
         plt.close()
         print(f'class distribution image saved to - {file_path}')
@@ -38,7 +39,7 @@ class DataVisualizer():
         plt.xlabel('Length of the Documents')
         plt.ylabel('Frequency')
         plt.title('Length-Frequency Distribution')
-        file_path = DIR_IMAGES_EDA + '/document_length_distribution.png'
+        file_path = DIR_IMAGES_EDA + f'/{self.name}_document_length_distribution.png'
         plt.savefig(file_path)
         plt.close()
         print(f'document length distribution image saved to - {file_path}')
@@ -93,6 +94,6 @@ class DataVisualizer():
         ax.set_title('Data Statistics')
         class_names = class_label
         ax.xaxis.set_ticklabels(class_names, rotation=45)
-        file_path = DIR_IMAGES_EDA + '/data_summary.png'
+        file_path = DIR_IMAGES_EDA + f'/{self.name}_data_summary.png'
         plt.savefig(file_path)
         plt.close()
