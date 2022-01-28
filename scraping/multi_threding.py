@@ -93,4 +93,18 @@ def scrape_banglanews24():
       thread = ScraperThread(categories, category, main_banglanews24)
       thread.start()
 
+def scrape_banglanews24_from_recent_years():
+
+   years = [2019, 2018, 2017, 2016, 2015, 2014]
+   # years = [2019]
+   for year in years:
+      years_q = f'category/information-technology/7?y={year}&'
+
+      categories = {'technology':years_q}
+
+      for category in categories:
+         time.sleep(3)
+         thread = ScraperThread(categories, category, main_banglanews24)
+         thread.start()
+
 

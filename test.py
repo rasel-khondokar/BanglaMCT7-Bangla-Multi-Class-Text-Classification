@@ -1,3 +1,3 @@
-from scraping.multi_threding import scrape_banglanews24
+from scraping.multi_threding import scrape_banglanews24, scrape_banglanews24_from_recent_years
 
-scrape_banglanews24()
+scrape_banglanews24_from_recent_years()

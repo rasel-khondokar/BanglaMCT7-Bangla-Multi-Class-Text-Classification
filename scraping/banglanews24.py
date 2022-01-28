@@ -35,7 +35,7 @@ class DcraScraper():
                         # Switch to the tab
                         time.sleep(2)
                         driver.switch_to.window(driver.window_handles[1])
-                        time.sleep(2)
+                        time.sleep(5)
 
                         # WebDriverWait(driver, 20).until(
                         #     EC.presence_of_element_located((By.CSS_SELECTOR, '.businessCard--businessName')))
@@ -46,7 +46,7 @@ class DcraScraper():
                             print(e)
 
                         try:
-                            data_dict['published_date'] = driver.find_element_by_css_selector('.post-heading span.time').text
+                            data_dict['published_date'] = driver.find_element_by_css_selector('.post-heading .time').text
                         except Exception as e:
                             print(e)
 
@@ -78,7 +78,8 @@ class DcraScraper():
     def scrape(self, categories, category):
         data_dir = f'DATASET'
         make_dir_if_not_exists(data_dir)
-        data_file =  f'{BASE_DIR}/{data_dir}/banglanews24_{category}.json'
+        # data_file =  f'{BASE_DIR}/{data_dir}/banglanews24_{category}.json' # for current year
+        data_file =  f'{BASE_DIR}/{data_dir}/banglanews24_{category}_{categories[category][-5:-1]}.json' # for recent years
         driver = self.driver
         main_site = 'https://www.banglanews24.com/'
         try:
@@ -100,7 +101,8 @@ class DcraScraper():
             max = int(pg_no[-2].text)
 
             for page in range(1, max + 1):
-                driver.get(f'{cat_page}?page={page}')
+                # driver.get(f'{cat_page}?page={page}') # for current year
+                driver.get(f'{cat_page}page={page}') # for previous years
 
                 try:
                     urls = driver.find_elements_by_css_selector('.category-area .list a' )
