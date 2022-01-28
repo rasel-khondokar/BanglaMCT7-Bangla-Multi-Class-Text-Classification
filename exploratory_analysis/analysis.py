@@ -9,7 +9,7 @@ class DataAnalyzer():
         sample_data = sample_data.reset_index()
         print('\n______________________showing cleaned data________________________________\n')
         for row in range(len(sample_data)):
-            print('Original:\n', sample_data.loc[row]['cleanText'], '\nCleaned:\n',
+            print('Original:\n', sample_data.loc[row]['cleaned'], '\nCleaned:\n',
                   sample_data.loc[row]['cleaned'], '\n', 'category:-- ', sample_data.loc[row]['category'], '\n')
 
 

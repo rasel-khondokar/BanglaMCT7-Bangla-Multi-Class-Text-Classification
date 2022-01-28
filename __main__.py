@@ -16,15 +16,15 @@ from training.training import ModelTrainer
 def main():
     for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
         make_dir_if_not_exists(dir)
-    name = 'bard'
+    name = 'collected_title_'
     # get cleaned train and test data
     preprocessor = PreProcessor()
-    data, data_test = preprocessor.read_bard()
+    data, data_test = preprocessor.read_collected_data()
 
     # exploratory data analysis
-    # eda = EDA(data, name)
-    # eda.visualize()
-    # eda.analyze()
+    eda = EDA(data, name)
+    eda.visualize()
+    eda.analyze()
 
     # Train and evaluation
     trainer = ModelTrainer(name, data, data_test)

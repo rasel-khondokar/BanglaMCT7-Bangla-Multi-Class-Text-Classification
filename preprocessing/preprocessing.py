@@ -199,23 +199,10 @@ class PreProcessor():
         return data, data_test
 
     def read_collected_data(self):
-        # dataset = pd.DataFrame()
-        # dataset_dir = f'{BASE_DIR}/DATASET/'
-        # files = os.listdir(dataset_dir)
-        # for file in files:
-        #     if '.json' in file:
-        #         try:
-        #             data_file = dataset_dir + file
-        #             df = pd.read_json(data_file)
-        #             time.sleep(10)
-        #             dataset = dataset.append(df, ignore_index=True)
-        #         except:
-        #             print(f"error during reading {file}")
-        #
-        # dataset.rename(columns={"raw_text": "cleanText"}, inplace=True)
         dataset_dir = f'{BASE_DIR}/DATASET/'
         file = f'{dataset_dir}collected_data.csv'
         dataset = pd.read_csv(file)
+        dataset = dataset.append(pd.read_csv(f'{dataset_dir}collected_data_1.csv'), ignore_index=True)
         # dataset = dataset.sample(100)
         data, data_test = train_test_split(dataset, test_size=.2)
 
@@ -239,12 +226,12 @@ class PreProcessor():
         print(f'After removing duplicates : {len(data)}')
         print(f'After removing duplicates : {len(data_test)}')
 
-        data = data[['cleanText', 'category']]
-        data_test = data_test[['cleanText', 'category']]
+        data = data[['title', 'category']]
+        data_test = data_test[['title', 'category']]
 
         # remove unnecessary punctuation & stopwords
-        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
-        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+        data['cleaned'] = data['title'].apply(self.cleaning_documents)
+        data_test['cleaned'] = data_test['title'].apply(self.cleaning_documents)
 
         self.data, self.data_test = data, data_test
 
