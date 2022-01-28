@@ -100,7 +100,7 @@ def scrape_banglanews24_from_recent_years():
    for year in years:
       years_q = f'category/education/20?y={year}&'
 
-      categories = {'technology':years_q}
+      categories = {'education':years_q}
 
       for category in categories:
          time.sleep(3)
