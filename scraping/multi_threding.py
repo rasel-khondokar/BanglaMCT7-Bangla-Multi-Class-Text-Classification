@@ -98,7 +98,7 @@ def scrape_banglanews24_from_recent_years():
    years = [2019, 2018, 2017, 2016, 2015, 2014]
    # years = [2019]
    for year in years:
-      years_q = f'category/share/1208?y={year}&'
+      years_q = f'category/banking/1209?y={year}&'
 
       categories = {'economy':years_q}
 

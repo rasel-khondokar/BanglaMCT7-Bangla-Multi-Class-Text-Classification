@@ -226,12 +226,12 @@ class PreProcessor():
         print(f'After removing duplicates : {len(data)}')
         print(f'After removing duplicates : {len(data_test)}')
 
-        data = data[['title', 'category']]
-        data_test = data_test[['title', 'category']]
+        data = data[['cleanText', 'category']]
+        data_test = data_test[['cleanText', 'category']]
 
         # remove unnecessary punctuation & stopwords
-        data['cleaned'] = data['title'].apply(self.cleaning_documents)
-        data_test['cleaned'] = data_test['title'].apply(self.cleaning_documents)
+        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
 
         self.data, self.data_test = data, data_test
 
