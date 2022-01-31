@@ -1,7 +1,8 @@
 import dill
 import numpy as np
+from matplotlib import pyplot as plt
 import tensorflow as tf
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay
 
 from preprocessing.preprocessing import PreProcessor
 from settings import DIR_RESOURCES, DIR_PERFORMENCE_REPORT
@@ -29,11 +30,16 @@ class Evaluator():
         y, class_names = preprocessor.decode_category(y)
         y_pred, class_names = preprocessor.decode_category(y_pred)
 
+
+        self.report_filename =  self.model_filepath.replace(DIR_RESOURCES, '').replace('.pkl', '').replace('.pickle', '')
+
         cm = confusion_matrix(y, y_pred)
+        # plt.rcParams["figure.figsize"] = (15,15)
+        ConfusionMatrixDisplay.from_predictions(y, y_pred, xticks_rotation=18.0, cmap='YlGn')
+        plt.savefig(f'{DIR_PERFORMENCE_REPORT}{self.report_filename}_{data_split}.png')
         report = classification_report(y, y_pred)
         print(report)
-        report_filename =  self.model_filepath.replace(DIR_RESOURCES, '').replace('.pkl', '').replace('.pickle', '')
-        with open(f'{DIR_PERFORMENCE_REPORT}{report_filename}_{data_split}.txt', 'w') as file:
+        with open(f'{DIR_PERFORMENCE_REPORT}{self.report_filename}_{data_split}.txt', 'w') as file:
             file.write('___________________ confusion_matrix _____________________\n')
             file.write(str(cm))
             file.write('\n\n\n')

@@ -93,11 +93,14 @@ class ModelTrainer():
 
         acc_callback = myCallback()
 
+
+
         # Saved the Best Model
         checkpoint = keras.callbacks.ModelCheckpoint(filepath_best_model, monitor='val_accuracy', verbose=2, save_best_only=True,
                                                      save_weights_only=False, mode='max')
         # callback list
-        callback_list = [acc_callback, checkpoint]
+        stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
+        callback_list = [acc_callback, checkpoint, stopping]
 
         if name == 'cnn_bi_lstm':
             model = self.model_cnn_bi_lstm(num_classes, vocab_size, embedding_dimension, input_length)
@@ -175,7 +178,8 @@ class ModelTrainer():
         checkpoint = keras.callbacks.ModelCheckpoint(filepath_best_model, monitor='val_accuracy', verbose=2, save_best_only=True,
                                                      save_weights_only=False, mode='max')
         # callback list
-        callback_list = [acc_callback, checkpoint]
+        stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
+        callback_list = [acc_callback, checkpoint, stopping]
 
         if model_name == f'{self.name}_{MODEL_FASTTEXT_SIMPLE}_fasttext':
             model = self.model_fasttext_simple(num_classes, embedding_layer)

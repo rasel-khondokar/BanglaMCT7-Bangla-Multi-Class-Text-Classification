@@ -63,7 +63,7 @@ class PreProcessor():
 
        return data, data_test
 
-    def read_osac(self):
+    def read_osac(self, is_split=True):
         dataset_dir = f'{BASE_DIR}/DATASET/OSAC/category'
         cat_dirs = os.listdir(dataset_dir)
         df = pd.DataFrame()
@@ -82,35 +82,50 @@ class PreProcessor():
                         #     break
 
         df = df[df['category'].isin(target_categories)]
-        data, data_test = train_test_split(df, test_size=.2)
+        df['category'] = df['category'].replace(target_categories,
+                                                ['economy', 'education','technology', 'politics', 'entertainment',
+                                                 'international', 'sports'])
+        if is_split:
+            data, data_test = train_test_split(df, test_size=.2)
 
-        self.data, self.data_test = data, data_test
+            self.data, self.data_test = data, data_test
 
-        print(f'Before removing null : {len(data)}')
-        print(f'Before removing null : {len(data_test)}')
-        data.dropna(inplace=True)
-        data_test.dropna(inplace=True)
-        print(f'After removing null : {len(data)}')
-        print(f'After removing null : {len(data_test)}')
+            print(f'Before removing null : {len(data)}')
+            print(f'Before removing null : {len(data_test)}')
+            data.dropna(inplace=True)
+            data_test.dropna(inplace=True)
+            print(f'After removing null : {len(data)}')
+            print(f'After removing null : {len(data_test)}')
 
-        # Remove duplicates
-        print(f'Before removing duplicates : {len(data)}')
-        print(f'Before removing duplicates : {len(data_test)}')
-        # data = data.drop_duplicates(subset=['url'])
-        # data_test = data_test.drop_duplicates(subset=['url'])
-        print(f'After removing duplicates : {len(data)}')
-        print(f'After removing duplicates : {len(data_test)}')
+            # Remove duplicates
+            print(f'Before removing duplicates : {len(data)}')
+            print(f'Before removing duplicates : {len(data_test)}')
+            # data = data.drop_duplicates(subset=['url'])
+            # data_test = data_test.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates : {len(data)}')
+            print(f'After removing duplicates : {len(data_test)}')
 
-        data = data[['cleanText', 'category']]
-        data_test = data_test[['cleanText', 'category']]
+            data = data[['cleanText', 'category']]
+            data_test = data_test[['cleanText', 'category']]
 
-        # remove unnecessary punctuation & stopwords
-        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
-        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+            # remove unnecessary punctuation & stopwords
+            data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+            data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
 
-        return data, data_test
+            return data, data_test
+        else:
+            print(f'Before removing null : {len(df)}')
+            df.dropna(inplace=True)
+            print(f'After removing null : {len(df)}')
 
-    def read_bard(self):
+            df = df[['cleanText', 'category']]
+
+            # remove unnecessary punctuation & stopwords
+            df['cleaned'] = df['cleanText'].apply(self.cleaning_documents)
+
+            return df
+
+    def read_bard(self, is_split=True):
         dataset_dir = f'{BASE_DIR}/DATASET/BARD'
         cat_dirs = os.listdir(dataset_dir)
         df = pd.DataFrame()
@@ -127,35 +142,48 @@ class PreProcessor():
                     #     break
 
         df = df[df['category'].isin(['economy', 'entertainment', 'international', 'sports'])]
-        data, data_test = train_test_split(df, test_size=.2)
 
-        self.data, self.data_test = data, data_test
+        if is_split:
+            data, data_test = train_test_split(df, test_size=.2)
 
-        print(f'Before removing null : {len(data)}')
-        print(f'Before removing null : {len(data_test)}')
-        data.dropna(inplace=True)
-        data_test.dropna(inplace=True)
-        print(f'After removing null : {len(data)}')
-        print(f'After removing null : {len(data_test)}')
+            self.data, self.data_test = data, data_test
 
-        # Remove duplicates
-        print(f'Before removing duplicates : {len(data)}')
-        print(f'Before removing duplicates : {len(data_test)}')
-        # data = data.drop_duplicates(subset=['url'])
-        # data_test = data_test.drop_duplicates(subset=['url'])
-        print(f'After removing duplicates : {len(data)}')
-        print(f'After removing duplicates : {len(data_test)}')
+            print(f'Before removing null : {len(data)}')
+            print(f'Before removing null : {len(data_test)}')
+            data.dropna(inplace=True)
+            data_test.dropna(inplace=True)
+            print(f'After removing null : {len(data)}')
+            print(f'After removing null : {len(data_test)}')
 
-        data = data[['cleanText', 'category']]
-        data_test = data_test[['cleanText', 'category']]
+            # Remove duplicates
+            print(f'Before removing duplicates : {len(data)}')
+            print(f'Before removing duplicates : {len(data_test)}')
+            # data = data.drop_duplicates(subset=['url'])
+            # data_test = data_test.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates : {len(data)}')
+            print(f'After removing duplicates : {len(data_test)}')
 
-        # remove unnecessary punctuation & stopwords
-        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
-        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+            data = data[['cleanText', 'category']]
+            data_test = data_test[['cleanText', 'category']]
 
-        return data, data_test
+            # remove unnecessary punctuation & stopwords
+            data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+            data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
 
-    def read_prothomalo(self):
+            return data, data_test
+        else:
+            print(f'Before removing null : {len(df)}')
+            df.dropna(inplace=True)
+            print(f'After removing null : {len(df)}')
+
+            df = df[['cleanText', 'category']]
+
+            # remove unnecessary punctuation & stopwords
+            df['cleaned'] = df['cleanText'].apply(self.cleaning_documents)
+
+            return df
+
+    def read_prothomalo(self, is_split=True):
         dataset_dir = f'{BASE_DIR}/DATASET/prothomALo'
         files = os.listdir(dataset_dir)
         dataset = pd.DataFrame()
@@ -164,39 +192,53 @@ class PreProcessor():
             df = pd.read_csv(data_file)
             dataset = dataset.append(df, ignore_index=True)
 
-        # dataset = dataset.sample(1000, random_state=0)
+        # dataset = dataset.sample(100, random_state=0)
+
         df = pd.DataFrame()
         df['cleanText'] = dataset['content']
         df['category'] = dataset['section']
-        df = df[df['category'].isin(['technology', 'economy', 'education', 'entertainment', 'international', 'sports'])]
-        data, data_test = train_test_split(df, test_size=.2)
+        df = df[df['category'].isin(['economy', 'education', 'entertainment', 'international', 'politics', 'sports', 'technology'])]
 
-        self.data, self.data_test = data, data_test
+        if is_split:
+            data, data_test = train_test_split(df, test_size=.01)
+
+            self.data, self.data_test = data, data_test
 
 
-        print(f'Before removing null : {len(data)}')
-        print(f'Before removing null : {len(data_test)}')
-        data.dropna(inplace=True)
-        data_test.dropna(inplace=True)
-        print(f'After removing null : {len(data)}')
-        print(f'After removing null : {len(data_test)}')
+            print(f'Before removing null : {len(data)}')
+            print(f'Before removing null : {len(data_test)}')
+            data.dropna(inplace=True)
+            data_test.dropna(inplace=True)
+            print(f'After removing null : {len(data)}')
+            print(f'After removing null : {len(data_test)}')
 
-        # Remove duplicates
-        print(f'Before removing duplicates : {len(data)}')
-        print(f'Before removing duplicates : {len(data_test)}')
-        # data = data.drop_duplicates(subset=['url'])
-        # data_test = data_test.drop_duplicates(subset=['url'])
-        print(f'After removing duplicates : {len(data)}')
-        print(f'After removing duplicates : {len(data_test)}')
+            # Remove duplicates
+            print(f'Before removing duplicates : {len(data)}')
+            print(f'Before removing duplicates : {len(data_test)}')
+            # data = data.drop_duplicates(subset=['url'])
+            # data_test = data_test.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates : {len(data)}')
+            print(f'After removing duplicates : {len(data_test)}')
 
-        data = data[['cleanText', 'category']]
-        data_test = data_test[['cleanText', 'category']]
+            data = data[['cleanText', 'category']]
+            data_test = data_test[['cleanText', 'category']]
 
-        # remove unnecessary punctuation & stopwords
-        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
-        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+            # remove unnecessary punctuation & stopwords
+            data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+            data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
 
-        return data, data_test
+            return data, data_test
+        else:
+            print(f'Before removing null : {len(df)}')
+            df.dropna(inplace=True)
+            print(f'After removing null : {len(df)}')
+
+            df = df[['cleanText', 'category']]
+
+            # remove unnecessary punctuation & stopwords
+            df['cleaned'] = df['cleanText'].apply(self.cleaning_documents)
+
+            return df
 
     def read_collected_data(self):
         dataset_dir = f'{BASE_DIR}/DATASET/'
@@ -204,27 +246,26 @@ class PreProcessor():
         dataset = pd.read_csv(file)
         dataset = dataset.append(pd.read_csv(f'{dataset_dir}collected_data_1.csv'), ignore_index=True)
         # dataset = dataset.sample(100)
-        data, data_test = train_test_split(dataset, test_size=.2)
-
-        # data, data_test = data.sample(100), data_test.sample(100)
-
-        data, data_test = data.reset_index(), data_test.reset_index()
+        # dataset = dataset.reset_index()
+        data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.category.values)
 
         # Remove null
-        print(f'Before removing null : {len(data)}')
-        print(f'Before removing null : {len(data_test)}')
+        print(f'Before removing null Train data : {len(data)}')
         data.dropna(inplace=True)
+        print(f'After removing null Train data : {len(data)}')
+
+        print(f'Before removing null Test data: {len(data_test)}')
         data_test.dropna(inplace=True)
-        print(f'After removing null : {len(data)}')
-        print(f'After removing null : {len(data_test)}')
+        print(f'After removing null Test data : {len(data_test)}')
 
         # Remove duplicates
-        print(f'Before removing duplicates : {len(data)}')
-        print(f'Before removing duplicates : {len(data_test)}')
+        print(f'Before removing duplicates Train data: {len(data)}')
         data = data.drop_duplicates(subset=['url'])
+        print(f'After removing duplicates Train data : {len(data)}')
+
+        print(f'Before removing duplicates Test data : {len(data_test)}')
         data_test = data_test.drop_duplicates(subset=['url'])
-        print(f'After removing duplicates : {len(data)}')
-        print(f'After removing duplicates : {len(data_test)}')
+        print(f'After removing duplicates Test data : {len(data_test)}')
 
         data = data[['cleanText', 'category']]
         data_test = data_test[['cleanText', 'category']]
@@ -267,8 +308,8 @@ class PreProcessor():
 
         return labels, class_names
 
-    def decode_category(self, encoded_category):
-        with open(DIR_RESOURCES+'/label_encoder.pickle', 'rb') as handle:
+    def decode_category(self, encoded_category, name=''):
+        with open(DIR_RESOURCES+f'/{name}label_encoder.pickle', 'rb') as handle:
             le = pickle.load(handle)
         decoded_labels = le.inverse_transform(encoded_category)
         labels = np.array(decoded_labels)
