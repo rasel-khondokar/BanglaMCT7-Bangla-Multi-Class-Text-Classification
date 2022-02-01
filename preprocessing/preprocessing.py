@@ -382,9 +382,12 @@ class PreProcessor():
             # =========================== Convert string into list of integer indices =================
             sequences = tokenizer.texts_to_sequences(dataset.cleaned)
             word_index = tokenizer.word_index
-            print("\n\t\t\t====== Encoded Sequences ======",
-                  "\nFound {} unique tokens".format(len(word_index)))
-            print(dataset.cleaned[10], "\n", sequences[10])
+            try:
+                print("\n\t\t\t====== Encoded Sequences ======",
+                      "\nFound {} unique tokens".format(len(word_index)))
+                print(dataset.cleaned[10], "\n", sequences[10])
+            except Exception as e:
+                print(f'Error during showing Encoded Sequences')
 
             # ==================================== Pad Sequences ==============================
             corpus = keras.preprocessing.sequence.pad_sequences(sequences, value=0.0,
