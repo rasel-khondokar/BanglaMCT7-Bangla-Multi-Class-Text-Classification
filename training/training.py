@@ -73,7 +73,7 @@ class ModelTrainer():
 
     def train_keras_tokenaizer(self, name):
 
-        name = f'{name}_keras_tokenaizer'
+        name = f'{self.name}_{name}_keras_tokenaizer'
 
         data, data_test = self.data, self.data_test
 
@@ -206,7 +206,7 @@ class ModelTrainer():
         evaluator.evaluate_dl_model(filepath_best_model)
 
     def train_tfidf_ml(self, name):
-        name = f'{name}_tfidf_ml'
+        name = f'{self.name}_{name}_tfidf_ml'
 
         data, data_test = self.data, self.data_test
 

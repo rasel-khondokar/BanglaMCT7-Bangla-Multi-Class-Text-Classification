@@ -240,44 +240,113 @@ class PreProcessor():
 
             return df
 
-    def read_collected_data(self):
+    def read_collected_data(self, is_split=True):
         dataset_dir = f'{BASE_DIR}/DATASET/'
         file = f'{dataset_dir}collected_data.csv'
         dataset = pd.read_csv(file)
         dataset = dataset.append(pd.read_csv(f'{dataset_dir}collected_data_1.csv'), ignore_index=True)
         # dataset = dataset.sample(100)
         # dataset = dataset.reset_index()
-        data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.category.values)
+        if is_split:
+            data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.category.values)
 
-        # Remove null
-        print(f'Before removing null Train data : {len(data)}')
-        data.dropna(inplace=True)
-        print(f'After removing null Train data : {len(data)}')
+            # Remove null
+            print(f'Before removing null Train data : {len(data)}')
+            data.dropna(inplace=True)
+            print(f'After removing null Train data : {len(data)}')
 
-        print(f'Before removing null Test data: {len(data_test)}')
-        data_test.dropna(inplace=True)
-        print(f'After removing null Test data : {len(data_test)}')
+            print(f'Before removing null Test data: {len(data_test)}')
+            data_test.dropna(inplace=True)
+            print(f'After removing null Test data : {len(data_test)}')
 
-        # Remove duplicates
-        print(f'Before removing duplicates Train data: {len(data)}')
-        data = data.drop_duplicates(subset=['url'])
-        print(f'After removing duplicates Train data : {len(data)}')
+            # Remove duplicates
+            print(f'Before removing duplicates Train data: {len(data)}')
+            data = data.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Train data : {len(data)}')
 
-        print(f'Before removing duplicates Test data : {len(data_test)}')
-        data_test = data_test.drop_duplicates(subset=['url'])
-        print(f'After removing duplicates Test data : {len(data_test)}')
+            print(f'Before removing duplicates Test data : {len(data_test)}')
+            data_test = data_test.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Test data : {len(data_test)}')
 
-        data = data[['cleanText', 'category']]
-        data_test = data_test[['cleanText', 'category']]
+            data = data[['cleanText', 'category']]
+            data_test = data_test[['cleanText', 'category']]
 
-        # remove unnecessary punctuation & stopwords
-        data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
-        data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+            # remove unnecessary punctuation & stopwords
+            data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+            data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
 
-        self.data, self.data_test = data, data_test
+            self.data, self.data_test = data, data_test
 
-        return data, data_test
+            return data, data_test
+        else:
+            print(f'Before removing null : {len(dataset)}')
+            dataset.dropna(inplace=True)
+            print(f'After removing null : {len(dataset)}')
+            # Remove duplicates
+            print(f'Before removing duplicates Train data: {len(dataset)}')
+            dataset = dataset.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Train data : {len(dataset)}')
 
+            df = dataset[['url', 'cleanText', 'category']]
+
+            # remove unnecessary punctuation & stopwords
+            df['cleaned'] = df['cleanText'].apply(self.cleaning_documents)
+
+            return df
+
+    def read_collected_data_incorrect_pred_removed(self, is_split=True):
+        dataset_dir = f'{BASE_DIR}/DATASET/'
+        file = f'{dataset_dir}collected_removed_urls_incorrect.csv'
+        dataset = pd.read_csv(file)
+        # dataset = dataset.sample(100)
+
+        dataset = dataset.reset_index()
+        if is_split:
+            data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.category.values)
+
+            # Remove null
+            print(f'Before removing null Train data : {len(data)}')
+            data.dropna(inplace=True)
+            print(f'After removing null Train data : {len(data)}')
+
+            print(f'Before removing null Test data: {len(data_test)}')
+            data_test.dropna(inplace=True)
+            print(f'After removing null Test data : {len(data_test)}')
+
+            # Remove duplicates
+            print(f'Before removing duplicates Train data: {len(data)}')
+            data = data.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Train data : {len(data)}')
+
+            print(f'Before removing duplicates Test data : {len(data_test)}')
+            data_test = data_test.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Test data : {len(data_test)}')
+
+            data = data[['cleanText', 'category']]
+            data_test = data_test[['cleanText', 'category']]
+
+            # remove unnecessary punctuation & stopwords
+            data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+            data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+
+            self.data, self.data_test = data, data_test
+
+            return data, data_test
+        else:
+            print(f'Before removing null : {len(dataset)}')
+            dataset.dropna(inplace=True)
+            print(f'After removing null : {len(dataset)}')
+            # Remove duplicates
+            print(f'Before removing duplicates Train data: {len(dataset)}')
+            dataset = dataset.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Train data : {len(dataset)}')
+
+            df = dataset[['url', 'cleanText', 'category']]
+
+            # remove unnecessary punctuation & stopwords
+            df['cleaned'] = df['cleanText'].apply(self.cleaning_documents)
+
+            return df
 
     def vectorize_tfidf(self, article, gram, name):
         tfidf = TfidfVectorizer(ngram_range=gram, use_idf=True, tokenizer=lambda x: x.split())
