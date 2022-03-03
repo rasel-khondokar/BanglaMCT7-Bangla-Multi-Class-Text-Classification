@@ -298,7 +298,7 @@ class PreProcessor():
         dataset_dir = f'{BASE_DIR}/DATASET/'
         file = f'{dataset_dir}collected_removed_urls_incorrect.csv'
         dataset = pd.read_csv(file)
-        # dataset = dataset.sample(100)
+        dataset = dataset.sample(100)
 
         dataset = dataset.reset_index()
         if is_split:
@@ -406,6 +406,15 @@ class PreProcessor():
         print("\nShape of Encoded Corpus =====>", corpus.shape)
         return corpus, labels, class_names
 
+    def preprocess_and_glove_encode_data(self, data, is_test=True):
+        if not is_test:
+            data = self.handle_low_length_doc(data)
+        num_words = 5000
+        corpus, labels, class_names = self.encoded_texts_with_keras_tokenaizer(data, 300, num_words, is_test)
+        print("\nShape of Encoded Corpus =====>", corpus.shape)
+        print("\nShape of Encoded Corpus =====>", corpus.shape)
+        return corpus, labels, class_names
+
 
     def tokenizer_info(self, mylist, bool):
         ordered = sorted(mylist.items(), key=lambda item: item[1], reverse=bool)
@@ -413,6 +422,75 @@ class PreProcessor():
             print(w, "\t", c)
 
     def encoded_texts_with_keras_tokenaizer(self, dataset, padding_length, max_words, is_test):
+
+        if is_test:
+            with open(DIR_RESOURCES+'/label_encoder.pickle', 'rb') as handle:
+                le = pickle.load(handle)
+            encoded_labels = le.transform(dataset.category)
+            labels = np.array(encoded_labels)
+            class_names = le.classes_
+            with open(DIR_RESOURCES+'/tokenizer.pickle', 'rb') as handle:
+                tokenizer = pickle.load(handle)
+
+            sequences = tokenizer.texts_to_sequences(dataset.cleaned)
+            corpus = pad_sequences(sequences, value=0.0, padding='post', maxlen=300)
+        else:
+            tokenizer = Tokenizer(num_words=max_words, filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n-',
+                                  split=' ', char_level=False, oov_token='<oov>', document_count=0)
+            # Fit the tokenizer
+            tokenizer.fit_on_texts(dataset.cleaned)
+            # ============================== Tokenizer Info =================================
+            (word_counts, word_docs, word_index, document_count) = (tokenizer.word_counts,
+                                                                    tokenizer.word_docs,
+                                                                    tokenizer.word_index,
+                                                                    tokenizer.document_count)
+
+
+
+            # =============================== Print all the information =========================
+            print("\t\t\t====== Tokenizer Info ======")
+            print("Words --> Counts:")
+            self.tokenizer_info(word_counts, bool=True)
+            print("\nWords --> Documents:")
+            self.tokenizer_info(word_docs, bool=True)
+            print("\nWords --> Index:")
+            self.tokenizer_info(word_index, bool=True)
+            print("\nTotal Documents -->", document_count)
+
+            # =========================== Convert string into list of integer indices =================
+            sequences = tokenizer.texts_to_sequences(dataset.cleaned)
+            word_index = tokenizer.word_index
+            try:
+                print("\n\t\t\t====== Encoded Sequences ======",
+                      "\nFound {} unique tokens".format(len(word_index)))
+                print(dataset.cleaned[10], "\n", sequences[10])
+            except Exception as e:
+                print(f'Error during showing Encoded Sequences')
+
+            # ==================================== Pad Sequences ==============================
+            corpus = keras.preprocessing.sequence.pad_sequences(sequences, value=0.0,
+                                                                padding='post', maxlen=padding_length)
+            print("\n\t\t\t====== Paded Sequences ======\n", dataset.cleaned[10], "\n", corpus[10])
+
+            # save the tokenizer into a pickle file
+            with open(DIR_RESOURCES + '/tokenizer.pickle', 'wb') as handle:
+                pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+            le = LabelEncoder()
+            le.fit(dataset.category)
+            encoded_labels = le.transform(dataset.category)
+            labels = np.array(encoded_labels)
+            class_names = le.classes_
+
+            # save the label encoder into a pickle file
+            with open(DIR_RESOURCES + '/label_encoder.pickle', 'wb') as handle:
+                pickle.dump(le, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+
+        return corpus, labels, class_names
+
+    def encoded_texts_with_glove_tokenaizer(self, dataset, padding_length, max_words, is_test):
 
         if is_test:
             with open(DIR_RESOURCES+'/label_encoder.pickle', 'rb') as handle:

@@ -21,18 +21,19 @@ def main():
     preprocessor = PreProcessor()
     data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
 
-    # exploratory data analysis
-    eda = EDA(data, name)
-    eda.visualize()
-    eda.analyze()
+    # # exploratory data analysis
+    # eda = EDA(data, name)
+    # eda.visualize()
+    # eda.analyze()
 
     # Train and evaluation
     trainer = ModelTrainer(name, data, data_test)
     # trainer.train_keras_tokenaizer(MODEL_BIDIRECTIONAL_GRU)
-    trainer.train_keras_tokenaizer(MODEL_CNN_BIDIRECTIONAL_LSTM)
-    trainer.train_fasttext(MODEL_FASTTEXT_SIMPLE)
-    trainer.train_fasttext(MODEL_FASTTEXT_DEEP_ANN)
-    trainer.train_tfidf_ml(MODEL_ML)
+    # trainer.train_keras_tokenaizer(MODEL_CNN_BIDIRECTIONAL_LSTM)
+    # trainer.train_fasttext(MODEL_FASTTEXT_SIMPLE)
+    # trainer.train_fasttext(MODEL_FASTTEXT_DEEP_ANN)
+    # trainer.train_tfidf_ml(MODEL_ML)
+    trainer.train_glove_tokenaizer('vdcnn')
 
 
 if __name__=='__main__':

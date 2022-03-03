@@ -2,6 +2,7 @@ DATASET/
 text_module/
 __pycache__/
 venv/
+data/
 .idea/
 *.pyc
 *.pkl
