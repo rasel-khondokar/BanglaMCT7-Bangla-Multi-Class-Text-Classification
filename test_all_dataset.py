@@ -13,18 +13,18 @@ from settings import MODEL_FASTTEXT_SIMPLE, DIR_RESOURCES, MODEL_BIDIRECTIONAL_G
     MODEL_FASTTEXT_DEEP_ANN, MODEL_ML, DIR_PERFORMENCE_REPORT
 
 preprocessor = PreProcessor()
-#
-datasets = {'osac':preprocessor.read_osac(is_split=False),
-            'prothomalo':preprocessor.read_prothomalo(is_split=False),
-            'bard':preprocessor.read_bard(is_split=False)
+
+datasets = {'osac_rm_oth':preprocessor.read_osac(is_split=False),
+            'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False),
+            'bard_rm_oth':preprocessor.read_bard(is_split=False)
 }
-# datasets = {'our':preprocessor.read_collected_data(is_split=False)}
+# datasets = {'our_rm_oth':preprocessor.read_collected_data(is_split=False)}
 
 models = {'incorrect_keras_bi_gru':['incorrect_pred_removed_bi_gru_keras_tokenaizer_best_model.pkl', MODEL_BIDIRECTIONAL_GRU],
           'incorrect_keras_cnn_bi_lstm':['incorrect_pred_removed_cnn_bi_lstm_keras_tokenaizer_best_model.pkl', MODEL_CNN_BIDIRECTIONAL_LSTM],
           'incorrect_fasttext_simple':['incorrect_pred_removed_simple_fasttext_best_model.pkl', MODEL_FASTTEXT_SIMPLE],
           'incorrect_fasttext_bi_lstm':['incorrect_pred_removed_bi_lstm_fasttext_best_model.pkl', MODEL_FASTTEXT_DEEP_ANN],
-          # 'incorrect_random_forest_tfidf_ml_model':['random_forest_tfidf_ml_model.pickle', MODEL_ML]
+          'incorrect_random_forest_tfidf_ml_model':['random_forest_tfidf_ml_model.pickle', MODEL_ML]
           }
 
 for model_key in models:
@@ -64,7 +64,7 @@ for model_key in models:
         print(le.classes_)
         decoded_labels = np.array(le.inverse_transform(y_pred))
         dataset['prediction'] = decoded_labels
-        dataset.to_csv(f'DATASET/{dataset_name}_{model_key}.csv')
+        # dataset.to_csv(f'DATASET/{dataset_name}_{model_key}.csv')
         print(set(decoded_labels))
         print(set(dataset['category']))
         report = classification_report(dataset['category'], decoded_labels)

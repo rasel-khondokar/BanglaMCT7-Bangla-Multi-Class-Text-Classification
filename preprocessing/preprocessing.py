@@ -19,7 +19,10 @@ from settings import DIR_DATASET, DIR_RESOURCES
 class PreProcessor():
 
     def cleaning_documents(self, articles):
-        news = articles.replace('\n',' ')
+        # remove non bangla text
+        news = "".join(i for i in articles if i in [".","।"] or 2432 <= ord(i) <= 2559 or ord(i)== 32)
+        # remove space
+        news = news.replace('\n',' ')
         # remove unnecessary punctuation
         news = re.sub('[^\u0980-\u09FF]',' ',str(news))
         # remove stopwords
