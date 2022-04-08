@@ -1,26 +1,60 @@
-from tensorflow import keras
-from tensorflow.python.keras.layers import Conv2D
+import tensorflow as tf
+import numpy as np
+from time import time
+n = 8192
+dtype = tf.float32
 
-def model_vdcnn_functional(num_classes):
-    inputs = keras.Input(shape=(2048,300, 1))
-    x = Conv2D(8, (3, 3), name='conv_1')(inputs)
-    x = Conv2D(16, (5, 5), name='conv_2')(x)
-    x = keras.layers.Activation('relu')(x)
-    x = keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2))(x)
-    x = Conv2D(32, (5, 5), name='conv_3')(x)
-    x = Conv2D(64, (7, 7), name='conv_4')(x)
-    x = keras.layers.Activation('relu')(x)
-    x = keras.layers.MaxPooling2D(pool_size=(3, 3), strides=(3, 3))(x)
+def benchmark_processor():
+    start_time = time()
+    matrix1 = tf.Variable(tf.ones((n, n), dtype=dtype))
+    matrix2 = tf.Variable(tf.ones((n, n), dtype=dtype))
+    product = tf.matmul(matrix1, matrix2)
+    finish_time = time()
+    elapsed_time = finish_time - start_time
+    return elapsed_time
+tf.config.list_physical_devices()
+with tf.device('/CPU:0'):
+    cpu_time = benchmark_processor()
+print(cpu_time)
 
-    x = Conv2D(128, (7, 7), name='conv_5')(x)
 
-    x = keras.layers.Activation('relu')(x)
-    x = keras.layers.MaxPooling2D(strides=(2, 2))(x)
-    x = keras.layers.Dense(2048)(x)
-    x = keras.layers.Dense(256)(x)
-    preds = keras.layers.Dense(num_classes, activation="softmax")(x)
-    model = keras.Model(inputs, preds)
-    return model
 
-model = model_vdcnn_functional(7)
-model.summary()
+
+
+# import json
+# import re
+#
+# import pandas as pd
+# from configs import BASE_DIR
+# dataset_dir = f'{BASE_DIR}/DATASET/'
+# file = f'{dataset_dir}scraped_data.json'
+# data = json.load(open(f'{file}'))
+# df = pd.DataFrame()
+# for d in data:
+#     df = df.append(d['comments'])
+# def clean_text(text):
+#     if isinstance(text, str):
+#         # remove non bangla text
+#         text = "".join(i for i in text if i in [".", "।"] or 2432 <= ord(i) <= 2559 or ord(i) == 32)
+#         # remove space
+#         text = text.replace('\n', ' ')
+#         # remove unnecessary punctuation
+#         text = re.sub('[^\u0980-\u09FF]', ' ', str(text))
+#         text = " ".join(text.split())
+#         return text
+# df.comment_text = df.comment_text.apply(clean_text)
+# comments = df.comment_text.to_list()
+# comments = [i for i in comments if i]
+
+# cols = df.columns
+# comments = []
+# for i in range(10):
+#     for col in cols:
+#         if 'comment_text' in col:
+#             if pd.notnull(df.loc[i][col]):
+#                 comments.append(df.loc[i][col])
+# json.dump(comments, open('DATASET/scraped_data.json', 'w'), indent=2, ensure_ascii=False)
+d = pd.DataFrame(comments, columns=['comments'])
+d.to_csv('DATASET/comments.csv', index=False)
+# df = df[df['label'].isin(['threat', 'troll'])]
+# print(df[['comment', 'label']].head())

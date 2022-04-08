@@ -16,10 +16,10 @@ from training.training import ModelTrainer
 def main():
     for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
         make_dir_if_not_exists(dir)
-    name = 'incorrect_pred_removed'
+    name = 'cyberbullying'
     # get cleaned train and test data
     preprocessor = PreProcessor()
-    data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
+    data, data_test = preprocessor.read_cyberbullying_dataset()
 
     # # exploratory data analysis
     # eda = EDA(data, name)
@@ -28,12 +28,12 @@ def main():
 
     # Train and evaluation
     trainer = ModelTrainer(name, data, data_test)
-    # trainer.train_keras_tokenaizer(MODEL_BIDIRECTIONAL_GRU)
-    # trainer.train_keras_tokenaizer(MODEL_CNN_BIDIRECTIONAL_LSTM)
-    # trainer.train_fasttext(MODEL_FASTTEXT_SIMPLE)
-    # trainer.train_fasttext(MODEL_FASTTEXT_DEEP_ANN)
-    # trainer.train_tfidf_ml(MODEL_ML)
-    trainer.train_glove_tokenaizer('vdcnn')
+    trainer.train_keras_tokenaizer(MODEL_BIDIRECTIONAL_GRU)
+    trainer.train_keras_tokenaizer(MODEL_CNN_BIDIRECTIONAL_LSTM)
+    trainer.train_fasttext(MODEL_FASTTEXT_SIMPLE)
+    trainer.train_fasttext(MODEL_FASTTEXT_DEEP_ANN)
+    trainer.train_tfidf_ml(MODEL_ML)
+    # trainer.train_glove_tokenaizer('vdcnn')
 
 
 if __name__=='__main__':

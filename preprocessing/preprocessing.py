@@ -348,6 +348,56 @@ class PreProcessor():
 
             return df
 
+    def read_cyberbullying_dataset(self, is_split=True):
+        dataset_dir = f'{BASE_DIR}/DATASET/'
+        file = f'{dataset_dir}cyberbullying.csv'
+        dataset = pd.read_csv(file)
+        # dataset = dataset.sample(100)
+
+        dataset['cleanText'] = dataset['comment']
+        dataset['category'] = dataset['label']
+
+        dataset = dataset.reset_index()
+        if is_split:
+            data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.label.values)
+
+            # Remove null
+            print(f'Before removing null Train data : {len(data)}')
+            data.dropna(inplace=True)
+            print(f'After removing null Train data : {len(data)}')
+
+            print(f'Before removing null Test data: {len(data_test)}')
+            data_test.dropna(inplace=True)
+            print(f'After removing null Test data : {len(data_test)}')
+
+
+
+            data = data[['cleanText', 'category']]
+            data_test = data_test[['cleanText', 'category']]
+
+            # remove unnecessary punctuation & stopwords
+            data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+            data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+
+            self.data, self.data_test = data, data_test
+
+            return data, data_test
+        else:
+            print(f'Before removing null : {len(dataset)}')
+            dataset.dropna(inplace=True)
+            print(f'After removing null : {len(dataset)}')
+            # Remove duplicates
+            print(f'Before removing duplicates Train data: {len(dataset)}')
+            dataset = dataset.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Train data : {len(dataset)}')
+
+            df = dataset[['url', 'cleanText', 'category']]
+
+            # remove unnecessary punctuation & stopwords
+            df['cleaned'] = df['cleanText'].apply(self.cleaning_documents)
+
+            return df
+
     def vectorize_tfidf(self, article, gram, name):
         tfidf = TfidfVectorizer(ngram_range=gram, use_idf=True, tokenizer=lambda x: x.split())
         x = tfidf.fit_transform(article)
@@ -398,8 +448,8 @@ class PreProcessor():
         return data
 
     def preprocess_and_encode_data(self, data, is_test=True):
-        if not is_test:
-            data = self.handle_low_length_doc(data)
+        # if not is_test:
+            # data = self.handle_low_length_doc(data)
         num_words = 5000
         corpus, labels, class_names = self.encoded_texts_with_keras_tokenaizer(data, 300, num_words, is_test)
         print("\nShape of Encoded Corpus =====>", corpus.shape)
@@ -407,8 +457,8 @@ class PreProcessor():
         return corpus, labels, class_names
 
     def preprocess_and_glove_encode_data(self, data, is_test=True):
-        if not is_test:
-            data = self.handle_low_length_doc(data)
+        # if not is_test:
+        #     data = self.handle_low_length_doc(data)
         num_words = 5000
         corpus, labels, class_names = self.encoded_texts_with_keras_tokenaizer(data, 300, num_words, is_test)
         print("\nShape of Encoded Corpus =====>", corpus.shape)
@@ -470,7 +520,8 @@ class PreProcessor():
             # ==================================== Pad Sequences ==============================
             corpus = keras.preprocessing.sequence.pad_sequences(sequences, value=0.0,
                                                                 padding='post', maxlen=padding_length)
-            print("\n\t\t\t====== Paded Sequences ======\n", dataset.cleaned[10], "\n", corpus[10])
+
+            # print("\n\t\t\t====== Paded Sequences ======\n", dataset.cleaned[10], "\n", corpus[10])
 
             # save the tokenizer into a pickle file
             with open(DIR_RESOURCES + '/tokenizer.pickle', 'wb') as handle:
