@@ -5,6 +5,12 @@ from preprocessing.preprocessing import PreProcessor
 preprocessor = PreProcessor()
 data, data_test = preprocessor.read_cyberbullying_dataset()
 
+'''
+Before removing null Train data : 35932
+After removing null Train data : 35191
+Before removing null Test data: 8984
+After removing null Test data : 8807
+'''
 
 # import json
 # import re

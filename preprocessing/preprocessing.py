@@ -371,9 +371,9 @@ class PreProcessor():
 
     def read_cyberbullying_dataset(self, is_split=True):
         dataset_dir = f'{BASE_DIR}/DATASET/'
-        file = f'{dataset_dir}cyberbullying.csv'
-        # dataset = pd.read_csv(file)
-        dataset = pd.DataFrame()
+        file = f'{dataset_dir}cyberbullying/cyberbullying.csv'
+        dataset = pd.read_csv(file)
+        # dataset = pd.DataFrame()
         dataset_labeled = self.read_cyberbullying_labeled_data()
         dataset = dataset.append(dataset_labeled, ignore_index=True)
 
@@ -381,10 +381,10 @@ class PreProcessor():
 
         dataset['cleanText'] = dataset['comment']
         dataset['category'] = dataset['label']
-
+        dataset = dataset[['cleanText', 'category']]
         dataset = dataset.reset_index()
         if is_split:
-            data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.label.values)
+            data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.category.values)
 
             # Remove null
             print(f'Before removing null Train data : {len(data)}')
