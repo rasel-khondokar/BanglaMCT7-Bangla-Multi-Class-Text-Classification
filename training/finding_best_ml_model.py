@@ -5,16 +5,16 @@ from preprocessing.preprocessing import PreProcessor
 
 
 def get_best_model():
-    name = 'auto_tuning'
+    name = 'auto_ml'
 
     preprocessor = PreProcessor()
-    data, data_test = preprocessor.read_data()
+    data = preprocessor.read_collected_data_incorrect_pred_removed(is_split=False)
 
     corpus = preprocessor.vectorize_tfidf(data.cleaned, (1, 1), name)
     labels, class_names = preprocessor.encode_category(data.category)
 
-    X_train, X_valid, y_train, y_valid = train_test_split(corpus, labels, train_size=0.7,
-                                                          test_size=0.1, random_state=0)
+    X_train, X_valid, y_train, y_valid = train_test_split(corpus, labels,
+                                                          test_size=0.2, random_state=0)
 
     # Fit into the models
     tpot = TPOTClassifier(generations=5, population_size=50, verbosity=2, config_dict="TPOT sparse" )
