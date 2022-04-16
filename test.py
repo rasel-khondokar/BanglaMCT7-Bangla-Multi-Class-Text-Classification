@@ -1,24 +1,9 @@
-import tensorflow as tf
-import numpy as np
-from time import time
-n = 8192
-dtype = tf.float32
+import json
 
-def benchmark_processor():
-    start_time = time()
-    matrix1 = tf.Variable(tf.ones((n, n), dtype=dtype))
-    matrix2 = tf.Variable(tf.ones((n, n), dtype=dtype))
-    product = tf.matmul(matrix1, matrix2)
-    finish_time = time()
-    elapsed_time = finish_time - start_time
-    return elapsed_time
-tf.config.list_physical_devices()
-with tf.device('/CPU:0'):
-    cpu_time = benchmark_processor()
-print(cpu_time)
+from preprocessing.preprocessing import PreProcessor
 
-
-
+preprocessor = PreProcessor()
+data, data_test = preprocessor.read_cyberbullying_dataset()
 
 
 # import json
@@ -54,7 +39,7 @@ print(cpu_time)
 #             if pd.notnull(df.loc[i][col]):
 #                 comments.append(df.loc[i][col])
 # json.dump(comments, open('DATASET/scraped_data.json', 'w'), indent=2, ensure_ascii=False)
-d = pd.DataFrame(comments, columns=['comments'])
-d.to_csv('DATASET/comments.csv', index=False)
+# d = pd.DataFrame(comments, columns=['comments'])
+# d.to_csv('DATASET/comments.csv', index=False)
 # df = df[df['label'].isin(['threat', 'troll'])]
 # print(df[['comment', 'label']].head())

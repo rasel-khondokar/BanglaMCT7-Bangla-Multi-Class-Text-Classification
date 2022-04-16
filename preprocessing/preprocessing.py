@@ -1,3 +1,4 @@
+import json
 import os
 import time
 
@@ -348,10 +349,34 @@ class PreProcessor():
 
             return df
 
+    def read_cyberbullying_labeled_data(self):
+        dataset_dir = f'{BASE_DIR}/DATASET/cyberbullying'
+        files = os.listdir(dataset_dir)
+        dataset = []
+        for file in files:
+            data_file = f'{dataset_dir}/{file}'
+            if '.json' in data_file:
+                with open(data_file) as file:
+                    data = json.load(file)
+                if data:
+                    for i in data:
+                        try:
+                            d = {'comment' : i['data']['comments'],
+                            'label' : i['annotations'][0]['result'][0]['value']['choices'][0]}
+                            dataset.append(d)
+                        except Exception as e:
+                            print(e)
+
+        return pd.DataFrame(dataset)
+
     def read_cyberbullying_dataset(self, is_split=True):
         dataset_dir = f'{BASE_DIR}/DATASET/'
         file = f'{dataset_dir}cyberbullying.csv'
-        dataset = pd.read_csv(file)
+        # dataset = pd.read_csv(file)
+        dataset = pd.DataFrame()
+        dataset_labeled = self.read_cyberbullying_labeled_data()
+        dataset = dataset.append(dataset_labeled, ignore_index=True)
+
         # dataset = dataset.sample(100)
 
         dataset['cleanText'] = dataset['comment']
