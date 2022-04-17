@@ -20,7 +20,8 @@ from sklearn.metrics import classification_report, confusion_matrix
 # get cleaned train and test data
 # get cleaned train and test data
 from preprocessing.preprocessing import PreProcessor
-from settings import DIR_IMAGES_EDA, DIR_RESOURCES, DIR_PERFORMENCE_REPORT, DIR_IMAGES_HISTORY
+from scraping.helpers import make_dir_if_not_exists
+from settings import DIR_IMAGES_EDA, DIR_RESOURCES, DIR_PERFORMENCE_REPORT, DIR_IMAGES_HISTORY, DIR_REPORT
 
 
 def preprocessing(df):
@@ -308,6 +309,10 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
     run_test(model, device, df_test, is_test=True)
     run_test(model, device, df, is_test=False)
 
+
+
+for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
+    make_dir_if_not_exists(dir)
 
 MODEL_PRETRAINEDS = ['bert-base-multilingual-cased','csebuetnlp/banglabert', 'monsoon-nlp/bangla-electra', 'sagorsarker/bangla-bert-base']
 preprocessor = PreProcessor()

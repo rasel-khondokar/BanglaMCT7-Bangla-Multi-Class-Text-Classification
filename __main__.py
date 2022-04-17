@@ -22,9 +22,9 @@ def main():
     data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
 
     # # exploratory data analysis
-    # eda = EDA(data, name)
-    # eda.visualize()
-    # eda.analyze()
+    eda = EDA(data, name)
+    eda.visualize()
+    eda.analyze()
 
     # Train and evaluation
     trainer = ModelTrainer(name, data, data_test)
