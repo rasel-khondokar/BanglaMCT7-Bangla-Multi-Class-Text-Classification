@@ -7,6 +7,7 @@ import tensorflow as tf
 from keras.layers import Embedding, TextVectorization
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.svm import LinearSVC
 from tensorflow import keras
 from tensorflow.keras.layers import LSTM,GRU
 from tensorflow.keras import layers
@@ -363,7 +364,8 @@ class ModelTrainer():
                                                               test_size=0.1, random_state=0)
 
 
-        model = RandomForestClassifier(bootstrap=False, criterion="gini", max_features=0.05, min_samples_leaf=19, min_samples_split=3, n_estimators=100)
+        # model = RandomForestClassifier(bootstrap=False, criterion="gini", max_features=0.05, min_samples_leaf=19, min_samples_split=3, n_estimators=100)
+        model = LinearSVC(C=10.0, dual=False, loss="squared_hinge", penalty="l2", tol=0.001)
         model.fit(X_train,y_train)
         model_filepath = f'{DIR_RESOURCES}/{name}_model.pickle'
 

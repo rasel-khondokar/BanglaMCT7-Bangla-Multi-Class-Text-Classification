@@ -4,7 +4,7 @@ MODEL_BIDIRECTIONAL_GRU = "bi_gru"
 MODEL_CNN_BIDIRECTIONAL_LSTM = "cnn_bi_lstm"
 MODEL_FASTTEXT_DEEP_ANN = "bi_lstm"
 MODEL_FASTTEXT_SIMPLE = "simple"
-MODEL_ML = "random_forest"
+MODEL_ML = "LinearSVC"
 
 MODEL_BERT_MULTILANGUAL_CASED = 'bert-base-multilingual-cased'
 MODEL_BERT_CESBUETNLP = 'csebuetnlp/banglabert'
