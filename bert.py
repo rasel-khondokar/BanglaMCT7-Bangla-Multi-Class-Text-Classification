@@ -162,7 +162,7 @@ def test_bert_model(model_name, model_path):
 
 def run_bert_test(model_name, df_test, is_test=True, report_name=''):
     # Load the saved model
-    filepath_best_model = f"{DIR_RESOURCES}bert_models/{model_name}"
+    filepath_best_model = f"{DIR_RESOURCES}bert_models/{model_name.replace('/', '_')}"
     model = BertForSequenceClassification.from_pretrained(
         model_name,
         num_labels=7,
