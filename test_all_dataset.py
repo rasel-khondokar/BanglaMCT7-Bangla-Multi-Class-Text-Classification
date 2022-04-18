@@ -43,26 +43,17 @@ def run_automl_test():
             # Load the saved model
             filepath_best_model = f"{DIR_RESOURCES}/{models[model_key][0]}"
 
-            if 'tfidf' in model_key:
-                with open(filepath_best_model, 'rb') as handle:
-                    model = dill.load(handle)
-            else:
-                model = tf.keras.models.load_model(filepath_best_model)
+            with open(filepath_best_model, 'rb') as handle:
+                model = dill.load(handle)
 
-            if "fasttext" in model_key:
-                x = dataset['cleaned']
-            elif 'tfidf' in model_key:
-                with open(f'{DIR_RESOURCES}/automl_best_model_LinearSVC_tfidf_ml_tfidf_encoder.pickle', 'rb') as handle:
-                    tfidf = dill.load(handle)
-                x = tfidf.transform(dataset['cleaned'])
-            else:
-                x, labels, class_names = preprocessor.preprocess_and_encode_data(dataset, is_test=True)
+
+            with open(f'{DIR_RESOURCES}/automl_best_model_LinearSVC_tfidf_ml_tfidf_encoder.pickle', 'rb') as handle:
+                tfidf = dill.load(handle)
+            x = tfidf.transform(dataset['cleaned'])
 
             predictions = model.predict(x)
-            if not 'tfidf' in model_key:
-                y_pred = np.argmax(predictions, axis=1)
-            else:
-                y_pred = predictions
+
+            y_pred = predictions
 
             print(le.classes_)
             decoded_labels = np.array(le.inverse_transform(y_pred))
