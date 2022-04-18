@@ -21,11 +21,22 @@ from sklearn.metrics import classification_report, confusion_matrix
 # get cleaned train and test data
 from preprocessing.preprocessing import PreProcessor
 from scraping.helpers import make_dir_if_not_exists
-from settings import DIR_IMAGES_EDA, DIR_RESOURCES, DIR_PERFORMENCE_REPORT, DIR_IMAGES_HISTORY, DIR_REPORT
+from settings import DIR_IMAGES_EDA, DIR_RESOURCES, DIR_PERFORMENCE_REPORT, DIR_IMAGES_HISTORY, DIR_REPORT, \
+    MODEL_BERT_MULTILANGUAL_CASED, MODEL_BERT_CESBUETNLP, MODEL_BERT_MONSOON_NLP, MODEL_BERT_SAGORSARKAR
 
+batch_size = 32
+MAX_LEN = 128  # max sequences length
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    print('GPU in use:', torch.cuda.get_device_name(0))
+    map_location = None
+else:
+    print('using the CPU')
+    device = torch.device("cpu")
+    map_location = 'cpu'
 
-def preprocessing(df):
-    sentences = df.cleanText.values
+def preprocessing(df, model_pretrained):
+    sentences = df.cleaned.values
 
     # labels = np.array([labels_encoding[l] for l in df.label.values])
     with open(DIR_RESOURCES + '/label_encoder.pickle', 'rb') as handle:
@@ -143,8 +154,26 @@ def run_train(epochs, model, train_dataloader, device, optimizer, validation_dat
 
     return losses, accuracies
 
-def run_test(model, device, df_test, is_test=True):
-    test_encoded_sentences, test_labels = preprocessing(df_test)
+def test_bert_model(model_name, model_path):
+    filepath_best_model = f"{DIR_RESOURCES}bert_models/{model_name}"
+    model = torch.load(f'{filepath_best_model}/pytorch_model.bin', map_location=map_location)
+    # model.to(DEVICE)
+    model.eval()
+    print(0)
+
+def run_bert_test(model_name, df_test, is_test=True, report_name=''):
+    # Load the saved model
+    filepath_best_model = f"{DIR_RESOURCES}bert_models/{model_name}"
+    model = BertForSequenceClassification.from_pretrained(
+        model_name,
+        num_labels=7,
+        output_attentions=False,
+        output_hidden_states=False,
+    )
+    # state_dict_path = f'{filepath_best_model}/model-state_{model_name}.bin'
+    model.load_state_dict(torch.load(f'{filepath_best_model}/pytorch_model.bin',map_location=map_location))
+
+    test_encoded_sentences, test_labels = preprocessing(df_test, model_name)
     actual_labels = test_labels
     test_attention_masks = attention_masks(test_encoded_sentences)
 
@@ -192,8 +221,8 @@ def run_test(model, device, df_test, is_test=True):
     else:
         data_split = 'train'
 
-    report_filename = f'{model_pretrained.replace("/", "_")}'
-    with open(f'{DIR_PERFORMENCE_REPORT}/{report_filename}_{data_split}.txt', 'w') as file:
+    report_filename = f'{model_name.replace("/", "_")}'
+    with open(f'{report_name}{DIR_PERFORMENCE_REPORT}/{report_filename}_{data_split}.txt', 'w') as file:
         file.write('___________________ confusion_matrix _____________________\n')
         file.write(str(cm))
         file.write('\n\n\n')
@@ -232,10 +261,10 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
         device = torch.device("cpu")
 
 
-    train_encoded_sentences, train_labels = preprocessing(df)
+    train_encoded_sentences, train_labels = preprocessing(df, model_pretrained)
     train_attention_masks = attention_masks(train_encoded_sentences)
 
-    test_encoded_sentences, test_labels = preprocessing(df_test)
+    test_encoded_sentences, test_labels = preprocessing(df_test, model_pretrained)
     test_attention_masks = attention_masks(test_encoded_sentences)
 
     train_inputs = torch.tensor(train_encoded_sentences)
@@ -291,7 +320,7 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
     name = model_pretrained.replace("/", "_")
     plot_accuracy_and_loss_bert(name, accuracies, losses)
 
-    output_dir = f'resources/bert_models/{name}'
+    output_dir = f'{DIR_RESOURCES}bert_models/{name}'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -306,32 +335,36 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
         f'{output_dir}/model-state_{name}.bin',
     )
 
-    run_test(model, device, df_test, is_test=True)
-    run_test(model, device, df, is_test=False)
+    run_bert_test(model, df_test, is_test=True)
+    run_bert_test(model, df, is_test=False)
 
 
+def main():
+    for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
+        make_dir_if_not_exists(dir)
 
-for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
-    make_dir_if_not_exists(dir)
+    MODEL_PRETRAINEDS = [MODEL_BERT_MULTILANGUAL_CASED,
+                         MODEL_BERT_CESBUETNLP,
+                         MODEL_BERT_MONSOON_NLP,
+                         MODEL_BERT_SAGORSARKAR]
 
-MODEL_PRETRAINEDS = ['bert-base-multilingual-cased','csebuetnlp/banglabert', 'monsoon-nlp/bangla-electra', 'sagorsarker/bangla-bert-base']
-preprocessor = PreProcessor()
-df, df_test = preprocessor.read_collected_data_incorrect_pred_removed()
+    preprocessor = PreProcessor()
+    df, df_test = preprocessor.read_collected_data_incorrect_pred_removed()
 
-for model_pretrained in MODEL_PRETRAINEDS:
-    try:
-        MAX_LEN = 128  # max sequences length
-        batch_size = 32
-        if model_pretrained == 'csebuetnlp/banglabert':
-            epochs = 10
-        elif model_pretrained == 'sagorsarker/bangla-bert-base':
-            epochs = 10
-        if model_pretrained == 'monsoon-nlp/bangla-electra':
-            epochs = 10
-        elif model_pretrained == 'bert-base-multilingual-cased':
-            epochs = 10
+    for model_pretrained in MODEL_PRETRAINEDS:
+        try:
+            if model_pretrained == 'csebuetnlp/banglabert':
+                epochs = 10
+            elif model_pretrained == 'sagorsarker/bangla-bert-base':
+                epochs = 10
+            if model_pretrained == 'monsoon-nlp/bangla-electra':
+                epochs = 10
+            elif model_pretrained == 'bert-base-multilingual-cased':
+                epochs = 10
 
-        train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs)
-    except Exception as e:
-        print(model_pretrained)
-        print(e)
+            train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs)
+        except Exception as e:
+            print(model_pretrained)
+            print(e)
+if __name__=='__main__':
+    main()

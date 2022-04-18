@@ -6,6 +6,11 @@ MODEL_FASTTEXT_DEEP_ANN = "bi_lstm"
 MODEL_FASTTEXT_SIMPLE = "simple"
 MODEL_ML = "random_forest"
 
+MODEL_BERT_MULTILANGUAL_CASED = 'bert-base-multilingual-cased'
+MODEL_BERT_CESBUETNLP = 'csebuetnlp/banglabert'
+MODEL_BERT_MONSOON_NLP = 'monsoon-nlp/bangla-electra'
+MODEL_BERT_SAGORSARKAR = 'sagorsarker/bangla-bert-base'
+
 MODEL_SELECTED = MODEL_FASTTEXT_DEEP_ANN
 
 DIR_BASE = f'{os.path.dirname(os.path.realpath(__file__))}/'
