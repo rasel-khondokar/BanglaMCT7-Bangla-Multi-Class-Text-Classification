@@ -349,6 +349,7 @@ def main():
     df, df_test = preprocessor.read_collected_data_incorrect_pred_removed()
 
     for model_name in MODEL_PRETRAINEDS:
+        print(f'\n\n************************************************* {model_name} *************************************************************\n\n')
         try:
             if model_name == 'csebuetnlp/banglabert':
                 epochs = 10
