@@ -169,6 +169,7 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
         output_attentions=False,
         output_hidden_states=False,
     )
+    model.to(device)
     # state_dict_path = f'{filepath_best_model}/model-state_{model_name}.bin'
     model.load_state_dict(torch.load(f'{filepath_best_model}/pytorch_model.bin',map_location=map_location))
 
@@ -188,6 +189,7 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
     eval_loss, eval_acc = 0, 0
 
     predicted_labels = []
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     for step, batch in enumerate(test_dataloader):
         batch = tuple(t.to(device) for t in batch)
