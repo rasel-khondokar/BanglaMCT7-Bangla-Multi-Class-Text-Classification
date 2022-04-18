@@ -81,8 +81,8 @@ class PreProcessor():
                         df = df.append({'cleanText':text, 'category':dir},
                                                  ignore_index=True)
 
-                        if i>10:
-                            break
+                        # if i>10:
+                        #     break
 
         df = df[df['category'].isin(target_categories)]
         df['category'] = df['category'].replace(target_categories,
