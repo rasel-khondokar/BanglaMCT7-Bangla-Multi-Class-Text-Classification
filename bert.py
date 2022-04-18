@@ -162,16 +162,18 @@ def test_bert_model(model_name, model_path):
 
 def run_bert_test(model_name, df_test, is_test=True, report_name=''):
     # Load the saved model
-    filepath_best_model = f"{DIR_RESOURCES}bert_models/{model_name.replace('/', '_')}"
-    model = BertForSequenceClassification.from_pretrained(
-        model_name,
-        num_labels=7,
-        output_attentions=False,
-        output_hidden_states=False,
-    )
+    # filepath_best_model = f"{DIR_RESOURCES}bert_models/{model_name.replace('/', '_')}"
+    # model = BertForSequenceClassification.from_pretrained(
+    #     model_name,
+    #     num_labels=7,
+    #     output_attentions=False,
+    #     output_hidden_states=False,
+    # )
+    output_dir = f'{DIR_RESOURCES}bert_models/{model_name.replace("/", "_")}'
+    model =  torch.load(f'{output_dir}/model.pt')
     model.to(device)
     # state_dict_path = f'{filepath_best_model}/model-state_{model_name}.bin'
-    model.load_state_dict(torch.load(f'{filepath_best_model}/pytorch_model.bin',map_location=map_location))
+    # model.load_state_dict(torch.load(f'{filepath_best_model}/pytorch_model.bin',map_location=map_location))
 
     test_encoded_sentences, test_labels = preprocessing(df_test, model_name)
     actual_labels = test_labels
@@ -247,7 +249,7 @@ def plot_accuracy_and_loss_bert(name, acc, loss):
     plt.close()
 
 
-def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
+def train(df, df_test, model_name, MAX_LEN, batch_size, epochs):
     num_labels = len(df.category.unique())
     device_name = tf.test.gpu_device_name()
 
@@ -262,10 +264,10 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
         device = torch.device("cpu")
 
 
-    train_encoded_sentences, train_labels = preprocessing(df, model_pretrained)
+    train_encoded_sentences, train_labels = preprocessing(df, model_name)
     train_attention_masks = attention_masks(train_encoded_sentences)
 
-    test_encoded_sentences, test_labels = preprocessing(df_test, model_pretrained)
+    test_encoded_sentences, test_labels = preprocessing(df_test, model_name)
     test_attention_masks = attention_masks(test_encoded_sentences)
 
     train_inputs = torch.tensor(train_encoded_sentences)
@@ -297,7 +299,7 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
     torch.cuda.manual_seed_all(seed_val)
 
     model = BertForSequenceClassification.from_pretrained(
-        model_pretrained,
+        model_name,
         num_labels = num_labels,
         output_attentions = False,
         output_hidden_states = False,
@@ -318,7 +320,7 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
                                                 num_training_steps = total_steps)
 
     losses, accuracies = run_train(epochs, model, train_dataloader, device, optimizer, validation_dataloader)
-    name = model_pretrained.replace("/", "_")
+    name = model_name.replace("/", "_")
     plot_accuracy_and_loss_bert(name, accuracies, losses)
 
     output_dir = f'{DIR_RESOURCES}bert_models/{name}'
@@ -329,16 +331,10 @@ def train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs):
     model_to_save.save_pretrained(output_dir)
 
     # save trained model
-    torch.save(
-        {
-            "model_state_dict": model.state_dict()
-        },
-        f'{output_dir}/model-state_{name}.bin',
-    )
+    torch.save(f'{output_dir}/model.pt')
 
-    run_bert_test(model, df_test, is_test=True)
-    run_bert_test(model, df, is_test=False)
-
+    run_bert_test(model_name, df_test, is_test=True)
+    run_bert_test(model_name, df, is_test=False)
 
 def main():
     for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
@@ -352,20 +348,20 @@ def main():
     preprocessor = PreProcessor()
     df, df_test = preprocessor.read_collected_data_incorrect_pred_removed()
 
-    for model_pretrained in MODEL_PRETRAINEDS:
+    for model_name in MODEL_PRETRAINEDS:
         try:
-            if model_pretrained == 'csebuetnlp/banglabert':
+            if model_name == 'csebuetnlp/banglabert':
                 epochs = 10
-            elif model_pretrained == 'sagorsarker/bangla-bert-base':
+            elif model_name == 'sagorsarker/bangla-bert-base':
                 epochs = 10
-            if model_pretrained == 'monsoon-nlp/bangla-electra':
+            if model_name == 'monsoon-nlp/bangla-electra':
                 epochs = 10
-            elif model_pretrained == 'bert-base-multilingual-cased':
+            elif model_name == 'bert-base-multilingual-cased':
                 epochs = 10
 
-            train(df, df_test, model_pretrained, MAX_LEN, batch_size, epochs)
+            train(df, df_test, model_name, MAX_LEN, batch_size, epochs)
         except Exception as e:
-            print(model_pretrained)
+            print(model_name)
             print(e)
 if __name__=='__main__':
     main()
