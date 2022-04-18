@@ -114,7 +114,7 @@ def run_test_othres_on_bert():
         for dataset_name in datasets:
             dataset = datasets[dataset_name]
             model_name = models[model_key][1]
-            run_bert_test(model_name, dataset, is_test=False, report_name='test_')
+            run_bert_test(model_name.replace("/", "_"), dataset, is_test=False, report_name='test_')
 
 def main():
     # run_dl_test()
