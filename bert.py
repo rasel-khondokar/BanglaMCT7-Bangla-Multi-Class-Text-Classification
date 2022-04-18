@@ -331,7 +331,7 @@ def train(df, df_test, model_name, MAX_LEN, batch_size, epochs):
     model_to_save.save_pretrained(output_dir)
 
     # save trained model
-    torch.save(f'{output_dir}/model.pt')
+    torch.save(model, f'{output_dir}/model.pt')
 
     run_bert_test(model_name, df_test, is_test=True)
     run_bert_test(model_name, df, is_test=False)
