@@ -21,7 +21,9 @@ preprocessor = PreProcessor()
 #             'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False),
 #             'bard_rm_oth':preprocessor.read_bard(is_split=False)
 # }
-# datasets = {'our_rm_oth':preprocessor.read_osac(is_split=False)}
+
+df, df_test = preprocessor.read_collected_data_incorrect_pred_removed()
+datasets = {'our_rm_oth':df_test}
 
 
 def run_dl_test():
