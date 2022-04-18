@@ -21,7 +21,7 @@ preprocessor = PreProcessor()
 #             'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False),
 #             'bard_rm_oth':preprocessor.read_bard(is_split=False)
 # }
-datasets = {'our_rm_oth':preprocessor.read_osac(is_split=False)}
+# datasets = {'our_rm_oth':preprocessor.read_osac(is_split=False)}
 
 
 def run_dl_test():
