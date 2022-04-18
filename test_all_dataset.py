@@ -13,7 +13,8 @@ from bert import run_bert_test
 from evaluation.performance import Evaluator
 from preprocessing.preprocessing import PreProcessor
 from settings import MODEL_FASTTEXT_SIMPLE, DIR_RESOURCES, MODEL_BIDIRECTIONAL_GRU, MODEL_CNN_BIDIRECTIONAL_LSTM, \
-    MODEL_FASTTEXT_DEEP_ANN, MODEL_ML, DIR_PERFORMENCE_REPORT, MODEL_BERT_MULTILANGUAL_CASED
+    MODEL_FASTTEXT_DEEP_ANN, MODEL_ML, DIR_PERFORMENCE_REPORT, MODEL_BERT_MULTILANGUAL_CASED, MODEL_BERT_CESBUETNLP, \
+    MODEL_BERT_MONSOON_NLP, MODEL_BERT_SAGORSARKAR
 
 preprocessor = PreProcessor()
 
@@ -100,7 +101,13 @@ def run_test_othres_on_bert():
     #           'incorrect_random_forest_tfidf_ml_model': ['random_forest_tfidf_ml_model.pickle', MODEL_ML]
     #           }
     models = {f'incorrect_{MODEL_BERT_MULTILANGUAL_CASED}': [MODEL_BERT_MULTILANGUAL_CASED.replace("/", "_"),
-                                         MODEL_BERT_MULTILANGUAL_CASED]
+                                         MODEL_BERT_MULTILANGUAL_CASED],
+              f'incorrect_{MODEL_BERT_CESBUETNLP}': [MODEL_BERT_CESBUETNLP.replace("/", "_"),
+                                                             MODEL_BERT_CESBUETNLP],
+              f'incorrect_{MODEL_BERT_MONSOON_NLP}': [MODEL_BERT_MONSOON_NLP.replace("/", "_"),
+                                                             MODEL_BERT_MONSOON_NLP],
+              f'incorrect_{MODEL_BERT_SAGORSARKAR}': [MODEL_BERT_SAGORSARKAR.replace("/", "_"),
+                                                     MODEL_BERT_SAGORSARKAR]
               }
 
     for model_key in models:
