@@ -29,11 +29,10 @@ MAX_LEN = 128  # max sequences length
 if torch.cuda.is_available():
     device = torch.device("cuda")
     print('GPU in use:', torch.cuda.get_device_name(0))
-    map_location = None
+    map_location = torch.device("cuda")
 else:
     print('using the CPU')
     device = torch.device("cpu")
-    map_location = 'cpu'
 
 def preprocessing(df, model_pretrained):
     sentences = df.cleaned.values
@@ -222,7 +221,7 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
         data_split = 'train'
 
     report_filename = f'{model_name.replace("/", "_")}'
-    with open(f'{report_name}{DIR_PERFORMENCE_REPORT}/{report_filename}_{data_split}.txt', 'w') as file:
+    with open(f'{DIR_PERFORMENCE_REPORT}/{report_name}{report_filename}_{data_split}.txt', 'w') as file:
         file.write('___________________ confusion_matrix _____________________\n')
         file.write(str(cm))
         file.write('\n\n\n')
