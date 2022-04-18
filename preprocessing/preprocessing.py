@@ -81,8 +81,8 @@ class PreProcessor():
                         df = df.append({'cleanText':text, 'category':dir},
                                                  ignore_index=True)
 
-                        if i>10:
-                            break
+                        # if i>10:
+                        #     break
 
         df = df[df['category'].isin(target_categories)]
         df['category'] = df['category'].replace(target_categories,
@@ -141,8 +141,8 @@ class PreProcessor():
                     df = df.append({'cleanText':text, 'category':dir},
                                              ignore_index=True)
 
-                    if i>100:
-                        break
+                    # if i>100:
+                    #     break
 
         df = df[df['category'].isin(['economy', 'entertainment', 'international', 'sports'])]
 
@@ -195,7 +195,7 @@ class PreProcessor():
             df = pd.read_csv(data_file)
             dataset = dataset.append(df, ignore_index=True)
 
-        dataset = dataset.sample(100, random_state=0)
+        # dataset = dataset.sample(100, random_state=0)
 
         df = pd.DataFrame()
         df['cleanText'] = dataset['content']
