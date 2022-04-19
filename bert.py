@@ -26,14 +26,15 @@ from settings import DIR_IMAGES_EDA, DIR_RESOURCES, DIR_PERFORMENCE_REPORT, DIR_
 
 batch_size = 32
 MAX_LEN = 128  # max sequences length
-if torch.cuda.is_available():
-    device = torch.device("cuda")
-    print('GPU in use:', torch.cuda.get_device_name(0))
-    map_location = torch.device("cuda")
-else:
-    print('using the CPU')
-    device = torch.device("cpu")
-
+# if torch.cuda.is_available():
+#     device = torch.device("cuda")
+#     print('GPU in use:', torch.cuda.get_device_name(0))
+#     map_location = torch.device("cuda")
+# else:
+#     print('using the CPU')
+#     device = torch.device("cpu")
+device = torch.device("cpu")
+map_location = torch.device("cpu")
 def preprocessing(df, model_pretrained):
     sentences = df.cleaned.values
 
@@ -138,12 +139,12 @@ def run_train(epochs, model, train_dataloader, device, optimizer, validation_dat
 
 
             #  Uncomment for GPU execution
-            logits = logits.detach().cpu().numpy()
-            eval_labels = eval_labels.to('cpu').numpy()
-            batch_acc = compute_accuracy(logits, eval_labels)
+            # logits = logits.detach().cpu().numpy()
+            # eval_labels = eval_labels.to('cpu').numpy()
+            # batch_acc = compute_accuracy(logits, eval_labels)
 
             # Uncomment for CPU execution
-            # batch_acc = compute_accuracy(logits.numpy(), eval_labels.numpy())
+            batch_acc = compute_accuracy(logits.numpy(), eval_labels.numpy())
 
             eval_acc += batch_acc
 
@@ -191,7 +192,6 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
     eval_loss, eval_acc = 0, 0
 
     predicted_labels = []
-    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     for step, batch in enumerate(test_dataloader):
         batch = tuple(t.to(device) for t in batch)
@@ -251,17 +251,19 @@ def plot_accuracy_and_loss_bert(name, acc, loss):
 
 def train(df, df_test, model_name, MAX_LEN, batch_size, epochs):
     num_labels = len(df.category.unique())
-    device_name = tf.test.gpu_device_name()
+    # device_name = tf.test.gpu_device_name()
+    #
+    # if device_name == '/device:GPU:0':
+    #     print(f'Found GPU at: {device_name}')
+    #
+    # if torch.cuda.is_available():
+    #     device = torch.device("cuda")
+    #     print('GPU in use:', torch.cuda.get_device_name(0))
+    # else:
+    #     print('using the CPU')
+    #     device = torch.device("cpu")
 
-    if device_name == '/device:GPU:0':
-        print(f'Found GPU at: {device_name}')
-
-    if torch.cuda.is_available():
-        device = torch.device("cuda")
-        print('GPU in use:', torch.cuda.get_device_name(0))
-    else:
-        print('using the CPU')
-        device = torch.device("cpu")
+    device = torch.device("cpu")
 
 
     train_encoded_sentences, train_labels = preprocessing(df, model_name)
@@ -305,8 +307,8 @@ def train(df, df_test, model_name, MAX_LEN, batch_size, epochs):
         output_hidden_states = False,
     )
 
-    if torch.cuda.is_available():
-        model.cuda()
+    # if torch.cuda.is_available():
+    #     model.cuda()
 
     optimizer = AdamW(model.parameters(),
                       lr = 3e-5,
