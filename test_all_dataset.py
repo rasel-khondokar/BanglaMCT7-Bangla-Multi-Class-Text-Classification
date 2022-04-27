@@ -159,12 +159,12 @@ def run_test_othres_on_bert():
         for dataset_name in datasets:
             dataset = datasets[dataset_name]
             model_name = models[model_key][1]
-            run_bert_test(model_name, dataset, is_test=False, report_name='test_')
+            run_bert_test(model_name, dataset, is_test=False, report_name='test_others_')
 
 
 def main():
     # run_dl_test()
-    # run_test_othres_on_bert()
-    run_automl_test()
+    run_test_othres_on_bert()
+    # run_automl_test()
 if __name__=='__main__':
     main()
