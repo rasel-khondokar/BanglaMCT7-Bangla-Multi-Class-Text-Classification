@@ -192,7 +192,7 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
     eval_loss, eval_acc = 0, 0
 
     predicted_labels = []
-
+    start = time.time()
     for step, batch in enumerate(test_dataloader):
         batch = tuple(t.to(device) for t in batch)
         eval_data, eval_masks, eval_labels = batch
@@ -207,7 +207,8 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
 
         batch_acc = compute_accuracy(logits, eval_labels)
         eval_acc += batch_acc
-
+    end = time.time()
+    pred_time = end-start
     print(f"Accuracy: {eval_acc / (step + 1)}")
     preprocessor = PreProcessor()
     eval_labels, class_names = preprocessor.decode_category(predicted_labels)
@@ -231,6 +232,10 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
         file.write('\n\n\n')
         file.write('___________________ classification report _____________________\n')
         file.write(str(report))
+
+        file.write('\n\n\n')
+        file.write('___________________ mean prediction time _____________________\n')
+        file.write(str(pred_time/len(predicted_labels)))
 
 def plot_accuracy_and_loss_bert(name, acc, loss):
     # Plot training & validation accuracy values
