@@ -226,7 +226,7 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
         data_split = 'train'
 
     report_filename = f'{model_name.replace("/", "_")}'
-    with open(f'{DIR_PERFORMENCE_REPORT}/{report_name}{report_filename}_{data_split}.txt', 'w') as file:
+    with open(f'{DIR_PERFORMENCE_REPORT}/{report_name}_{report_filename}_{data_split}.txt', 'w') as file:
         file.write('___________________ confusion_matrix _____________________\n')
         file.write(str(cm))
         file.write('\n\n\n')

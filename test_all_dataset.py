@@ -27,7 +27,7 @@ datasets = {'osac_rm_oth':preprocessor.read_osac(is_split=False),
 # datasets = {'our_rm_oth':df_test}
 
 def run_automl_test():
-    models = {'automl_best_model': ['automl_best_model_LinearSVC_tfidf_ml_model.pickle', MODEL_ML]
+    models = {'automl_best_model_LinearSVC': ['automl_best_model_LinearSVC_tfidf_ml_model.pickle', MODEL_ML]
               }
 
     for model_key in models:
@@ -63,7 +63,7 @@ def run_automl_test():
             print(set(dataset['category']))
             report = classification_report(dataset['category'], decoded_labels)
 
-            name = 'test'
+            name = f'test_others'
             with open(f'{DIR_PERFORMENCE_REPORT}/{name}_{dataset_name}_{model_key}.txt', 'w') as file:
                 file.write(str(report))
             cm = confusion_matrix(dataset['category'], decoded_labels)
@@ -126,7 +126,7 @@ def run_dl_test():
             print(set(dataset['category']))
             report = classification_report(dataset['category'], decoded_labels)
 
-            name = 'test'
+            name = 'test_others_'
             with open(f'{DIR_PERFORMENCE_REPORT}/{name}_{dataset_name}_{model_key}.txt', 'w') as file:
                 file.write(str(report))
             cm = confusion_matrix(dataset['category'], decoded_labels)
@@ -135,16 +135,6 @@ def run_dl_test():
 
 
 def run_test_othres_on_bert():
-    # models = {'incorrect_keras_bi_gru': ['incorrect_pred_removed_bi_gru_keras_tokenaizer_best_model.pkl',
-    #                                      MODEL_BIDIRECTIONAL_GRU],
-    #           'incorrect_keras_cnn_bi_lstm': ['incorrect_pred_removed_cnn_bi_lstm_keras_tokenaizer_best_model.pkl',
-    #                                           MODEL_CNN_BIDIRECTIONAL_LSTM],
-    #           'incorrect_fasttext_simple': ['incorrect_pred_removed_simple_fasttext_best_model.pkl',
-    #                                         MODEL_FASTTEXT_SIMPLE],
-    #           'incorrect_fasttext_bi_lstm': ['incorrect_pred_removed_bi_lstm_fasttext_best_model.pkl',
-    #                                          MODEL_FASTTEXT_DEEP_ANN],
-    #           'incorrect_random_forest_tfidf_ml_model': ['random_forest_tfidf_ml_model.pickle', MODEL_ML]
-    #           }
     models = {f'incorrect_{MODEL_BERT_MULTILANGUAL_CASED}': [MODEL_BERT_MULTILANGUAL_CASED.replace("/", "_"),
                                          MODEL_BERT_MULTILANGUAL_CASED],
               f'incorrect_{MODEL_BERT_CESBUETNLP}': [MODEL_BERT_CESBUETNLP.replace("/", "_"),
@@ -159,12 +149,12 @@ def run_test_othres_on_bert():
         for dataset_name in datasets:
             dataset = datasets[dataset_name]
             model_name = models[model_key][1]
-            run_bert_test(model_name, dataset, is_test=False, report_name='test_others_')
+            run_bert_test(model_name, dataset, is_test=False, report_name=f'test_others_{dataset_name}')
 
 
 def main():
-    # run_dl_test()
+    run_dl_test()
     run_test_othres_on_bert()
-    # run_automl_test()
+    run_automl_test()
 if __name__=='__main__':
     main()
