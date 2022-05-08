@@ -35,19 +35,19 @@ def run_automl_test():
             dataset = datasets[dataset_name]
             model_name = models[model_key][1]
 
-            with open(DIR_RESOURCES + f'/label_encoder.pickle', 'rb') as handle:
+            with open(DIR_RESOURCES + f'label_encoder.pickle', 'rb') as handle:
                 le = pickle.load(handle)
             encoded_labels = le.transform(dataset['category'])
             labels = np.array(encoded_labels)
 
             # Load the saved model
-            filepath_best_model = f"{DIR_RESOURCES}/{models[model_key][0]}"
+            filepath_best_model = f"{DIR_RESOURCES}{models[model_key][0]}"
 
             with open(filepath_best_model, 'rb') as handle:
                 model = dill.load(handle)
 
 
-            with open(f'{DIR_RESOURCES}/automl_best_model_LinearSVC_tfidf_ml_tfidf_encoder.pickle', 'rb') as handle:
+            with open(f'{DIR_RESOURCES}automl_best_model_LinearSVC_tfidf_ml_tfidf_encoder.pickle', 'rb') as handle:
                 tfidf = dill.load(handle)
             x = tfidf.transform(dataset['cleaned'])
 
@@ -64,11 +64,11 @@ def run_automl_test():
             report = classification_report(dataset['category'], decoded_labels)
 
             name = f'test_others'
-            with open(f'{DIR_PERFORMENCE_REPORT}/{name}_{dataset_name}_{model_key}.txt', 'w') as file:
+            with open(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.txt', 'w') as file:
                 file.write(str(report))
             cm = confusion_matrix(dataset['category'], decoded_labels)
             ConfusionMatrixDisplay.from_predictions(dataset['category'], decoded_labels, xticks_rotation=18.0, cmap='YlGn')
-            plt.savefig(f'{DIR_PERFORMENCE_REPORT}/{name}_{dataset_name}_{model_key}.png')
+            plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.png')
 
 
 
@@ -89,13 +89,13 @@ def run_dl_test():
             dataset = datasets[dataset_name]
             model_name = models[model_key][1]
 
-            with open(DIR_RESOURCES + f'/label_encoder.pickle', 'rb') as handle:
+            with open(DIR_RESOURCES + f'label_encoder.pickle', 'rb') as handle:
                 le = pickle.load(handle)
             encoded_labels = le.transform(dataset['category'])
             labels = np.array(encoded_labels)
 
             # Load the saved model
-            filepath_best_model = f"{DIR_RESOURCES}/{models[model_key][0]}"
+            filepath_best_model = f"{DIR_RESOURCES}{models[model_key][0]}"
 
             if 'tfidf' in model_key:
                 with open(filepath_best_model, 'rb') as handle:
@@ -106,7 +106,7 @@ def run_dl_test():
             if "fasttext" in model_key:
                 x = dataset['cleaned']
             elif 'tfidf' in model_key:
-                with open(f'{DIR_RESOURCES}/random_forest_tfidf_ml_tfidf_encoder.pickle', 'rb') as handle:
+                with open(f'{DIR_RESOURCES}random_forest_tfidf_ml_tfidf_encoder.pickle', 'rb') as handle:
                     tfidf = dill.load(handle)
                 x = tfidf.transform(dataset['cleaned'])
             else:
@@ -127,11 +127,11 @@ def run_dl_test():
             report = classification_report(dataset['category'], decoded_labels)
 
             name = 'test_others_'
-            with open(f'{DIR_PERFORMENCE_REPORT}/{name}_{dataset_name}_{model_key}.txt', 'w') as file:
+            with open(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.txt', 'w') as file:
                 file.write(str(report))
             cm = confusion_matrix(dataset['category'], decoded_labels)
             ConfusionMatrixDisplay.from_predictions(dataset['category'], decoded_labels, xticks_rotation=18.0, cmap='YlGn')
-            plt.savefig(f'{DIR_PERFORMENCE_REPORT}/{name}_{dataset_name}_{model_key}.png')
+            plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.png')
 
 
 def run_test_othres_on_bert():
