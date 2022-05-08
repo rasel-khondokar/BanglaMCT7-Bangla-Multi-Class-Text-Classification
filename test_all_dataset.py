@@ -153,8 +153,18 @@ def run_test_othres_on_bert():
 
 
 def main():
-    run_dl_test()
-    run_test_othres_on_bert()
-    run_automl_test()
+    try:
+        run_dl_test()
+    except Exception as e:
+        print(e)
+    try:
+        run_test_othres_on_bert()
+    except Exception as e:
+        print(e)
+    try:
+        run_automl_test()
+    except Exception as e:
+        print(e)
+
 if __name__=='__main__':
     main()
