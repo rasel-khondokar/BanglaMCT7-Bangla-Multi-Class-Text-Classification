@@ -1,0 +1,13 @@
+               precision    recall  f1-score   support
+
+      economy       0.96      0.82      0.88      5796
+    education       0.80      0.94      0.86      2509
+entertainment       0.97      0.92      0.94     11756
+international       0.92      0.94      0.93     10806
+     politics       0.00      0.00      0.00         0
+       sports       0.99      0.97      0.98     17996
+   technology       0.72      0.94      0.82      3578
+
+     accuracy                           0.93     52441
+    macro avg       0.77      0.79      0.77     52441
+ weighted avg       0.94      0.93      0.93     52441
