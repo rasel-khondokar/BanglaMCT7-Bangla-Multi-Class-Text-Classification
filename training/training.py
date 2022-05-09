@@ -1,4 +1,6 @@
+import datetime
 import os
+import time
 
 import dill
 import numpy as np
@@ -365,8 +367,10 @@ class ModelTrainer():
 
 
         # model = RandomForestClassifier(bootstrap=False, criterion="gini", max_features=0.05, min_samples_leaf=19, min_samples_split=3, n_estimators=100)
+        s = datetime.datetime.now()
         model = LinearSVC(C=10.0, dual=False, loss="squared_hinge", penalty="l2", tol=0.001)
         model.fit(X_train,y_train)
+        print(f'Training time : {datetime.datetime.now()-s}')
         model_filepath = f'{DIR_RESOURCES}/{name}_model.pickle'
 
         with open(model_filepath, 'wb') as handle:
