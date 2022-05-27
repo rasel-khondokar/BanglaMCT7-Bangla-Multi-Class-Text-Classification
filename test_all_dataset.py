@@ -151,20 +151,46 @@ def run_test_othres_on_bert():
             model_name = models[model_key][1]
             run_bert_test(model_name, dataset, is_test=False, report_name=f'test_others_{dataset_name}')
 
+def run_test_train_test_on_bert():
+    data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
+    datasets = {'dataset_test': data_test,
+                'dataset_train': data
+                }
+    models = {f'incorrect_{MODEL_BERT_MULTILANGUAL_CASED}': [MODEL_BERT_MULTILANGUAL_CASED.replace("/", "_"),
+                                         MODEL_BERT_MULTILANGUAL_CASED],
+              f'incorrect_{MODEL_BERT_CESBUETNLP}': [MODEL_BERT_CESBUETNLP.replace("/", "_"),
+                                                             MODEL_BERT_CESBUETNLP],
+              f'incorrect_{MODEL_BERT_MONSOON_NLP}': [MODEL_BERT_MONSOON_NLP.replace("/", "_"),
+                                                             MODEL_BERT_MONSOON_NLP],
+              f'incorrect_{MODEL_BERT_SAGORSARKAR}': [MODEL_BERT_SAGORSARKAR.replace("/", "_"),
+                                                     MODEL_BERT_SAGORSARKAR]
+              }
+
+    for model_key in models:
+        for dataset_name in datasets:
+            dataset = datasets[dataset_name]
+            model_name = models[model_key][1]
+            run_bert_test(model_name, dataset, is_test=False, report_name=f'test_others_{dataset_name}')
+
 
 def main():
     try:
-        run_dl_test()
+        run_test_train_test_on_bert()
     except Exception as e:
         print(e)
-    try:
-        run_test_othres_on_bert()
-    except Exception as e:
-        print(e)
-    try:
-        run_automl_test()
-    except Exception as e:
-        print(e)
+
+    # try:
+    #     run_dl_test()
+    # except Exception as e:
+    #     print(e)
+    # try:
+    #     run_test_othres_on_bert()
+    # except Exception as e:
+    #     print(e)
+    # try:
+    #     run_automl_test()
+    # except Exception as e:
+    #     print(e)
 
 if __name__=='__main__':
     main()
