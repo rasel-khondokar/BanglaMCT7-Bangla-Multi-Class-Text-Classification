@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from keras.layers import Embedding, TextVectorization
+from keras.utils.vis_utils import plot_model
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from tensorflow import keras
@@ -136,7 +137,7 @@ class ModelTrainer():
         vocab_size = 5000
         num_classes = len(list(np.unique(data['category'])))
         batch_size = 64
-        num_epochs = 100
+        num_epochs = 1
         filepath_best_model = f"{DIR_RESOURCES}/{name}_best_model.pkl"
 
         acc_callback = myCallback()
@@ -156,6 +157,8 @@ class ModelTrainer():
             model = self.model_bi_gru(num_classes, vocab_size, embedding_dimension, input_length)
 
         print(model.summary())
+        file_path = DIR_IMAGES_EDA + f'/{name}_model_summary.eps'
+        plot_model(model, to_file=file_path, show_shapes=True, show_layer_names=True)
         model.compile(optimizer=keras.optimizers.Adam(),loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
         history = model.fit(X_train,
@@ -293,7 +296,7 @@ class ModelTrainer():
     def train_fasttext(self, model_name):
 
         model_name = f'{self.name}_{model_name}_fasttext'
-        num_epochs = 100
+        num_epochs = 1
         batch_size = 256
 
         data, data_test = self.data, self.data_test

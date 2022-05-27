@@ -1,16 +1,29 @@
-import json
 
-from preprocessing.preprocessing import PreProcessor
 
-preprocessor = PreProcessor()
-data, data_test = preprocessor.read_cyberbullying_dataset()
+# Train and evaluation
+from training.training import ModelTrainer
 
-'''
-Before removing null Train data : 35932
-After removing null Train data : 35191
-Before removing null Test data: 8984
-After removing null Test data : 8807
-'''
+trainer = ModelTrainer('name', [], [])
+embedding_dimension = 128
+input_length = 300
+vocab_size = 5000
+batch_size = 64
+num_epochs = 100
+model = trainer.model_cnn_bi_lstm(7, vocab_size, embedding_dimension, input_length)
+print(model.summary())
+# import json
+#
+# from preprocessing.preprocessing import PreProcessor
+#
+# preprocessor = PreProcessor()
+# data, data_test = preprocessor.read_cyberbullying_dataset()
+#
+# '''
+# Before removing null Train data : 35932
+# After removing null Train data : 35191
+# Before removing null Test data: 8984
+# After removing null Test data : 8807
+# '''
 
 # import json
 # import re

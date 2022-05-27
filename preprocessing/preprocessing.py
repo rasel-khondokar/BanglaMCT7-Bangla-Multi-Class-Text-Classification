@@ -377,7 +377,7 @@ class PreProcessor():
         dataset_labeled = self.read_cyberbullying_labeled_data()
         dataset = dataset.append(dataset_labeled, ignore_index=True)
 
-        # dataset = dataset.sample(100)
+        dataset = dataset.sample(100)
 
         dataset['cleanText'] = dataset['comment']
         dataset['category'] = dataset['label']
