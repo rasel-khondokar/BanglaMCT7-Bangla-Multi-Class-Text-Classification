@@ -16,15 +16,18 @@ from training.training import ModelTrainer
 def main():
     for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
         make_dir_if_not_exists(dir)
-    name = 'cyberbullying'
+    name = 'news_cat_bn'
     # get cleaned train and test data
     preprocessor = PreProcessor()
     data, data_test = preprocessor.read_cyberbullying_dataset()
 
-    # # exploratory data analysis
-    # eda = EDA(data, name)
-    # eda.visualize()
-    # eda.analyze()
+    # exploratory data analysis
+    try:
+        eda = EDA(data, name)
+        eda.visualize()
+        eda.analyze()
+    except Exception as e:
+        print(e)
 
     # Train and evaluation
     trainer = ModelTrainer(name, data, data_test)
@@ -35,6 +38,10 @@ def main():
     trainer.train_tfidf_ml(MODEL_ML)
     # trainer.train_glove_tokenaizer('vdcnn')
 
+    # try:
+    #     run_automl_test()
+    # except Exception as e:
+    #     print(e)
 
 if __name__=='__main__':
     main()

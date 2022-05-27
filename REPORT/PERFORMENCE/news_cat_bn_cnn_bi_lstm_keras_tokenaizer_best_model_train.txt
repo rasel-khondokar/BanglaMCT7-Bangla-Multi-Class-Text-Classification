@@ -1,0 +1,20 @@
+___________________ confusion_matrix _____________________
+[[ 0  0 31  0  0]
+ [ 0  0 13  0  0]
+ [ 0  0 16  0  0]
+ [ 0  0  3  0  0]
+ [ 0  0 17  0  0]]
+
+
+___________________ classification report _____________________
+              precision    recall  f1-score   support
+
+   not bully       0.00      0.00      0.00        31
+   religious       0.00      0.00      0.00        13
+      sexual       0.20      1.00      0.33        16
+      threat       0.00      0.00      0.00         3
+       troll       0.00      0.00      0.00        17
+
+    accuracy                           0.20        80
+   macro avg       0.04      0.20      0.07        80
+weighted avg       0.04      0.20      0.07        80

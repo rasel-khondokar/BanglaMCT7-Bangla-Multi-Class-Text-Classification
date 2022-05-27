@@ -20,7 +20,10 @@ from settings import DIR_DATASET, DIR_RESOURCES
 class PreProcessor():
 
     def cleaning_documents(self, articles):
-        news = articles.replace('\n',' ')
+        # remove non bangla text
+        news = "".join(i for i in articles if i in [".","।"] or 2432 <= ord(i) <= 2559 or ord(i)== 32)
+        # remove space
+        news = news.replace('\n',' ')
         # remove unnecessary punctuation
         news = re.sub('[^\u0980-\u09FF]',' ',str(news))
         # remove stopwords
@@ -79,7 +82,7 @@ class PreProcessor():
                         df = df.append({'cleanText':text, 'category':dir},
                                                  ignore_index=True)
 
-                        # if i>100:
+                        # if i>10:
                         #     break
 
         df = df[df['category'].isin(target_categories)]
@@ -299,7 +302,7 @@ class PreProcessor():
         dataset_dir = f'{BASE_DIR}/DATASET/'
         file = f'{dataset_dir}collected_removed_urls_incorrect.csv'
         dataset = pd.read_csv(file)
-        dataset = dataset.sample(100)
+        # dataset = dataset.sample(500)
 
         dataset = dataset.reset_index()
         if is_split:
