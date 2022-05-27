@@ -335,7 +335,8 @@ class ModelTrainer():
 
         print(model.summary())
         model.compile(loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),optimizer="adam", metrics=['accuracy'])
-
+        file_path = DIR_IMAGES_EDA + f'/{model_name}_model_summary.eps'
+        plot_model(model, to_file=file_path, show_shapes=True, show_layer_names=True)
         history = model.fit(train_ds,
                             epochs=num_epochs,
                             batch_size=batch_size,
