@@ -1,0 +1,29 @@
+___________________ confusion_matrix _____________________
+[[13  0  0  0  0  0  0]
+ [ 0 10  0  0  0  0  0]
+ [ 0  0  7  0  0  0  0]
+ [ 0  0  0 19  0  0  0]
+ [ 0  0  0  0 10  0  0]
+ [ 0  0  0  0  0 15  0]
+ [ 0  0  0  0  0  0  6]]
+
+
+___________________ classification report _____________________
+               precision    recall  f1-score   support
+
+      economy       1.00      1.00      1.00        13
+    education       1.00      1.00      1.00        10
+entertainment       1.00      1.00      1.00         7
+international       1.00      1.00      1.00        19
+     politics       1.00      1.00      1.00        10
+       sports       1.00      1.00      1.00        15
+   technology       1.00      1.00      1.00         6
+
+     accuracy                           1.00        80
+    macro avg       1.00      1.00      1.00        80
+ weighted avg       1.00      1.00      1.00        80
+
+
+
+___________________ mean prediction time _____________________
+0.006966450810432434
