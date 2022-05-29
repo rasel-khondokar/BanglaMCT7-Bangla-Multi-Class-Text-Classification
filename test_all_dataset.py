@@ -1,5 +1,6 @@
 import os
 import pickle
+import time
 
 import dill
 import pandas as pd
@@ -18,13 +19,15 @@ from settings import MODEL_FASTTEXT_SIMPLE, DIR_RESOURCES, MODEL_BIDIRECTIONAL_G
 
 preprocessor = PreProcessor()
 
-datasets = {'osac_rm_oth':preprocessor.read_osac(is_split=False),
-            'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False),
-            'bard_rm_oth':preprocessor.read_bard(is_split=False)
-}
+# datasets = {'osac_rm_oth':preprocessor.read_osac(is_split=False),
+#             'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False),
+#             'bard_rm_oth':preprocessor.read_bard(is_split=False)
+# }
 
-# df, df_test = preprocessor.read_collected_data_incorrect_pred_removed()
-# datasets = {'our_rm_oth':df_test}
+data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
+datasets = {'dataset_test': data_test,
+            'dataset_train': data
+            }
 
 def run_automl_test():
     models = {'automl_best_model_LinearSVC': ['automl_best_model_LinearSVC_tfidf_ml_model.pickle', MODEL_ML]
@@ -51,7 +54,10 @@ def run_automl_test():
                 tfidf = dill.load(handle)
             x = tfidf.transform(dataset['cleaned'])
 
+            start = time.time()
             predictions = model.predict(x)
+            time_taken = time.time() - start
+
 
             y_pred = predictions
 
@@ -62,11 +68,18 @@ def run_automl_test():
             print(set(decoded_labels))
             print(set(dataset['category']))
             report = classification_report(dataset['category'], decoded_labels)
+            cm = confusion_matrix(dataset['category'], decoded_labels)
 
             name = f'test_others'
             with open(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.txt', 'w') as file:
+                file.write('___________________ confusion_matrix _____________________\n')
+                file.write(str(cm))
+                file.write('\n\n\n')
+                file.write('___________________ classification report _____________________\n')
                 file.write(str(report))
-            cm = confusion_matrix(dataset['category'], decoded_labels)
+                file.write('\n\n\n')
+                file.write('___________________ mean prediction time _____________________\n')
+                file.write(str(time_taken))
             ConfusionMatrixDisplay.from_predictions(dataset['category'], decoded_labels, xticks_rotation=18.0, cmap='YlGn')
             plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.png')
 
@@ -112,7 +125,10 @@ def run_dl_test():
             else:
                 x, labels, class_names = preprocessor.preprocess_and_encode_data(dataset, is_test=True)
 
+            start = time.time()
             predictions = model.predict(x)
+            time_taken = time.time()-start
+
             if not 'tfidf' in model_key:
                 y_pred = np.argmax(predictions, axis=1)
             else:
@@ -125,11 +141,18 @@ def run_dl_test():
             print(set(decoded_labels))
             print(set(dataset['category']))
             report = classification_report(dataset['category'], decoded_labels)
+            cm = confusion_matrix(dataset['category'], decoded_labels)
 
             name = 'test_others_'
             with open(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.txt', 'w') as file:
+                file.write('___________________ confusion_matrix _____________________\n')
+                file.write(str(cm))
+                file.write('\n\n\n')
+                file.write('___________________ classification report _____________________\n')
                 file.write(str(report))
-            cm = confusion_matrix(dataset['category'], decoded_labels)
+                file.write('\n\n\n')
+                file.write('___________________ mean prediction time _____________________\n')
+                file.write(str(time_taken))
             ConfusionMatrixDisplay.from_predictions(dataset['category'], decoded_labels, xticks_rotation=18.0, cmap='YlGn')
             plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.png')
 
@@ -174,23 +197,23 @@ def run_test_train_test_on_bert():
 
 
 def main():
-    try:
-        run_test_train_test_on_bert()
-    except Exception as e:
-        print(e)
-
     # try:
-    #     run_dl_test()
+    #     run_test_train_test_on_bert()
     # except Exception as e:
     #     print(e)
+
+    try:
+        run_dl_test()
+    except Exception as e:
+        print(e)
     # try:
     #     run_test_othres_on_bert()
     # except Exception as e:
     #     print(e)
-    # try:
-    #     run_automl_test()
-    # except Exception as e:
-    #     print(e)
+    try:
+        run_automl_test()
+    except Exception as e:
+        print(e)
 
 if __name__=='__main__':
     main()
