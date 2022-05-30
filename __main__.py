@@ -33,7 +33,7 @@ def main():
     trainer.train_fasttext(MODEL_FASTTEXT_SIMPLE)
     trainer.train_fasttext(MODEL_FASTTEXT_DEEP_ANN)
     trainer.train_tfidf_ml(MODEL_ML)
-    trainer.train_glove_tokenaizer('vdcnn')
+    # trainer.train_glove_tokenaizer('vdcnn')
 
 
 if __name__=='__main__':
