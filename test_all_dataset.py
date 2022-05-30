@@ -38,10 +38,13 @@ def run_automl_test():
             dataset = datasets[dataset_name]
             model_name = models[model_key][1]
 
+
             with open(DIR_RESOURCES + f'label_encoder.pickle', 'rb') as handle:
                 le = pickle.load(handle)
             encoded_labels = le.transform(dataset['category'])
             labels = np.array(encoded_labels)
+
+            start = time.time()
 
             # Load the saved model
             filepath_best_model = f"{DIR_RESOURCES}{models[model_key][0]}"
@@ -54,7 +57,7 @@ def run_automl_test():
                 tfidf = dill.load(handle)
             x = tfidf.transform(dataset['cleaned'])
 
-            start = time.time()
+
             predictions = model.predict(x)
             time_taken = time.time() - start
 
@@ -79,7 +82,7 @@ def run_automl_test():
                 file.write(str(report))
                 file.write('\n\n\n')
                 file.write('___________________ mean prediction time _____________________\n')
-                file.write(str(time_taken))
+                file.write(str(time_taken/len(dataset['category'])))
             ConfusionMatrixDisplay.from_predictions(dataset['category'], decoded_labels, xticks_rotation=18.0, cmap='YlGn')
             plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.png')
 
@@ -102,11 +105,15 @@ def run_dl_test():
             dataset = datasets[dataset_name]
             model_name = models[model_key][1]
 
+
+
+
             with open(DIR_RESOURCES + f'label_encoder.pickle', 'rb') as handle:
                 le = pickle.load(handle)
             encoded_labels = le.transform(dataset['category'])
             labels = np.array(encoded_labels)
 
+            start = time.time()
             # Load the saved model
             filepath_best_model = f"{DIR_RESOURCES}{models[model_key][0]}"
 
@@ -125,14 +132,15 @@ def run_dl_test():
             else:
                 x, labels, class_names = preprocessor.preprocess_and_encode_data(dataset, is_test=True)
 
-            start = time.time()
             predictions = model.predict(x)
-            time_taken = time.time()-start
 
             if not 'tfidf' in model_key:
                 y_pred = np.argmax(predictions, axis=1)
             else:
                 y_pred = predictions
+
+
+            time_taken = time.time()-start
 
             print(le.classes_)
             decoded_labels = np.array(le.inverse_transform(y_pred))
@@ -152,7 +160,7 @@ def run_dl_test():
                 file.write(str(report))
                 file.write('\n\n\n')
                 file.write('___________________ mean prediction time _____________________\n')
-                file.write(str(time_taken))
+                file.write(str(time_taken/len(dataset['category'])))
             ConfusionMatrixDisplay.from_predictions(dataset['category'], decoded_labels, xticks_rotation=18.0, cmap='YlGn')
             plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.png')
 
@@ -197,10 +205,10 @@ def run_test_train_test_on_bert():
 
 
 def main():
-    # try:
-    #     run_test_train_test_on_bert()
-    # except Exception as e:
-    #     print(e)
+    try:
+        run_test_train_test_on_bert()
+    except Exception as e:
+        print(e)
 
     try:
         run_dl_test()

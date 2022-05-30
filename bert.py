@@ -170,6 +170,8 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
     #     output_attentions=False,
     #     output_hidden_states=False,
     # )
+
+    start = time.time()
     output_dir = f'{DIR_RESOURCES}bert_models/{model_name.replace("/", "_")}'
     model =  torch.load(f'{output_dir}/model.pt')
     model.to(device)
@@ -192,7 +194,6 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
     eval_loss, eval_acc = 0, 0
 
     predicted_labels = []
-    start = time.time()
     for step, batch in enumerate(test_dataloader):
         batch = tuple(t.to(device) for t in batch)
         eval_data, eval_masks, eval_labels = batch
