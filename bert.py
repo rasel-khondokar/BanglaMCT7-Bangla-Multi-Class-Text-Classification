@@ -15,7 +15,7 @@ from transformers import BertTokenizer
 from transformers import BertForSequenceClassification, AdamW, BertConfig, BertPreTrainedModel, BertModel
 from transformers import get_linear_schedule_with_warmup
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 
 # get cleaned train and test data
 # get cleaned train and test data
@@ -237,6 +237,8 @@ def run_bert_test(model_name, df_test, is_test=True, report_name=''):
         file.write('\n\n\n')
         file.write('___________________ mean prediction time _____________________\n')
         file.write(str(pred_time/len(predicted_labels)))
+    ConfusionMatrixDisplay.from_predictions(actual_labels, eval_labels, xticks_rotation=18.0, cmap='YlGn')
+    plt.savefig(f'{DIR_PERFORMENCE_REPORT}/{report_name}_{report_filename}_{data_split}.eps', format='eps')
 
 def plot_accuracy_and_loss_bert(name, acc, loss):
     # Plot training & validation accuracy values
