@@ -301,7 +301,7 @@ class PreProcessor():
         dataset_dir = f'{BASE_DIR}/DATASET/'
         file = f'{dataset_dir}collected_removed_urls_incorrect.csv'
         dataset = pd.read_csv(file)
-        # dataset = dataset.sample(1000)
+        # dataset = dataset.sample(100)
 
         dataset = dataset.reset_index()
         if is_split:

@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import seaborn as sns
 import numpy as np
 
@@ -75,8 +76,19 @@ class DataVisualizer():
             print("Number of Words:{}".format(len(word_list)))
             print("Number of Unique Words:{}".format(len(np.unique(word_list))))
             print("Most Frequent Words:\n")
+
             for k, v in ordered[:10]:
                 print("{}\t{}".format(k, v))
+
+            prop = fm.FontProperties(fname='kalpurush.ttf')
+
+            top_10 = pd.DataFrame.from_dict(ordered[:10])
+            sns.barplot(data=top_10, x=0, y=1)
+            plt.xlabel('Frequency')
+            plt.title('Class-wise most frequency words')
+            file_path = DIR_IMAGES_EDA + f'/top_10_words_{label}.png'
+            plt.savefig(file_path)
+            plt.close()
 
         data_matrix = pd.DataFrame({'Total Documents': documents,
                                     'Total Words': words,

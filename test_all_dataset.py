@@ -84,7 +84,7 @@ def run_automl_test():
                 file.write('___________________ mean prediction time _____________________\n')
                 file.write(str(time_taken/len(dataset['category'])))
             ConfusionMatrixDisplay.from_predictions(dataset['category'], decoded_labels, xticks_rotation=18.0, cmap='YlGn')
-            plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.png')
+            plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.eps', format='eps')
 
 
 
@@ -162,7 +162,7 @@ def run_dl_test():
                 file.write('___________________ mean prediction time _____________________\n')
                 file.write(str(time_taken/len(dataset['category'])))
             ConfusionMatrixDisplay.from_predictions(dataset['category'], decoded_labels, xticks_rotation=18.0, cmap='YlGn')
-            plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.png')
+            plt.savefig(f'{DIR_PERFORMENCE_REPORT}{name}_{dataset_name}_{model_key}.eps', format='eps')
 
 
 def run_test_othres_on_bert():
