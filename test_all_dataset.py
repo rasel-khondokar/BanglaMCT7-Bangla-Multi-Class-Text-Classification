@@ -24,10 +24,13 @@ preprocessor = PreProcessor()
 #             'bard_rm_oth':preprocessor.read_bard(is_split=False)
 # }
 
-data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
-datasets = {'dataset_test': data_test,
-            'dataset_train': data
-            }
+# data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
+# datasets = {'dataset_test': data_test,
+#             'dataset_train': data
+#             }
+
+datasets = {'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False)
+}
 
 def run_automl_test():
     models = {'automl_best_model_LinearSVC': ['automl_best_model_LinearSVC_tfidf_ml_model.pickle', MODEL_ML]
@@ -183,10 +186,10 @@ def run_test_othres_on_bert():
             run_bert_test(model_name, dataset, is_test=False, report_name=f'test_others_{dataset_name}')
 
 def run_test_train_test_on_bert():
-    data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
-    datasets = {'dataset_test': data_test,
-                'dataset_train': data
-                }
+    # data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
+    # datasets = {'dataset_test': data_test,
+    #             'dataset_train': data
+    #             }
     models = {f'incorrect_{MODEL_BERT_MULTILANGUAL_CASED}': [MODEL_BERT_MULTILANGUAL_CASED.replace("/", "_"),
                                          MODEL_BERT_MULTILANGUAL_CASED],
               f'incorrect_{MODEL_BERT_CESBUETNLP}': [MODEL_BERT_CESBUETNLP.replace("/", "_"),
