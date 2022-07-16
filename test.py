@@ -1,4 +1,7 @@
 import pandas as pd
+
+from exploratory_analysis.eda import EDA
+from preprocessing.preprocessing import PreProcessor
 from settings import DIR_PERFORMENCE_REPORT
 
 
@@ -19,14 +22,37 @@ def make_excel_report_from_cls_report(name, files):
     for f in files:
         df = df.append(make_df_from_cls_report(f), ignore_index=True)
     df.to_excel(f'{DIR_PERFORMENCE_REPORT}performence table - {name}.xlsx')
-make_excel_report_from_cls_report('prothomalo', [
-    'test_others_prothomalo_rm_oth_automl_best_model_LinearSVC',
-    'test_others__prothomalo_rm_oth_incorrect_fasttext_bi_lstm',
-    'test_others__prothomalo_rm_oth_incorrect_fasttext_simple',
-    'test_others__prothomalo_rm_oth_incorrect_keras_cnn_bi_lstm',
-    'test_others__prothomalo_rm_oth_incorrect_keras_bi_gru',
-    'test_others_prothomalo_rm_oth_bert-base-multilingual-cased_train',
-    'test_others_prothomalo_rm_oth_csebuetnlp_banglabert_train',
-    'test_others_prothomalo_rm_oth_monsoon-nlp_bangla-electra_train',
-    'test_others_prothomalo_rm_oth_sagorsarker_bangla-bert-base_train'
-])
+# make_excel_report_from_cls_report('prothomalo', [
+#     'test_others_prothomalo_rm_oth_automl_best_model_LinearSVC',
+#     'test_others__prothomalo_rm_oth_incorrect_fasttext_bi_lstm',
+#     'test_others__prothomalo_rm_oth_incorrect_fasttext_simple',
+#     'test_others__prothomalo_rm_oth_incorrect_keras_cnn_bi_lstm',
+#     'test_others__prothomalo_rm_oth_incorrect_keras_bi_gru',
+#     'test_others_prothomalo_rm_oth_bert-base-multilingual-cased_train',
+#     'test_others_prothomalo_rm_oth_csebuetnlp_banglabert_train',
+#     'test_others_prothomalo_rm_oth_monsoon-nlp_bangla-electra_train',
+#     'test_others_prothomalo_rm_oth_sagorsarker_bangla-bert-base_train'
+# ])
+
+preprocessor = PreProcessor()
+# data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
+data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
+# # # exploratory data analysis
+# eda = EDA(data, 'test')
+# eda.analyze()
+def get_len(x):
+    return len(x)
+
+data['l_r'] = data['cleanText'].apply(get_len)
+data['l_c'] =  data['cleaned'].apply(get_len)
+data['dif'] = data['l_r']-data['l_c']
+data = data.sort_values(by=['dif'])
+
+for i in range(len(data)):
+    print('___________________________________________________________________________________________________________________________________________________________')
+    print(data.iloc[i]['dif'])
+    print('raw : ')
+    print(data.iloc[i]['cleanText'])
+    print('clean : ')
+    print(data.iloc[i]['cleaned'])
+    print(data.iloc[i]['category'])

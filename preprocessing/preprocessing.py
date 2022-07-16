@@ -81,8 +81,8 @@ class PreProcessor():
                         df = df.append({'cleanText':text, 'category':dir},
                                                  ignore_index=True)
 
-                        # if i>10:
-                        #     break
+                        if i>10:
+                            break
 
         df = df[df['category'].isin(target_categories)]
         df['category'] = df['category'].replace(target_categories,
@@ -195,7 +195,7 @@ class PreProcessor():
             df = pd.read_csv(data_file)
             dataset = dataset.append(df, ignore_index=True)
 
-        # dataset = dataset.sample(100, random_state=0)
+        dataset = dataset.sample(100, random_state=0)
 
         df = pd.DataFrame()
         df['cleanText'] = dataset['content']
@@ -301,7 +301,7 @@ class PreProcessor():
         dataset_dir = f'{BASE_DIR}/DATASET/'
         file = f'{dataset_dir}collected_removed_urls_incorrect.csv'
         dataset = pd.read_csv(file)
-        # dataset = dataset.sample(100)
+        dataset = dataset.sample(10000)
 
         dataset = dataset.reset_index()
         if is_split:
