@@ -39,7 +39,7 @@ def preprocessing(df, model_pretrained):
     sentences = df.cleaned.values
 
     # labels = np.array([labels_encoding[l] for l in df.label.values])
-    with open(DIR_RESOURCES + '/label_encoder.pickle', 'rb') as handle:
+    with open(DIR_RESOURCES + 'label_encoder.pickle', 'rb') as handle:
         le = pickle.load(handle)
     encoded_labels = le.transform(df.category)
     labels = np.array(encoded_labels)
@@ -264,14 +264,14 @@ def train(df, df_test, model_name, MAX_LEN, batch_size, epochs):
     # if device_name == '/device:GPU:0':
     #     print(f'Found GPU at: {device_name}')
     #
-    # if torch.cuda.is_available():
-    #     device = torch.device("cuda")
-    #     print('GPU in use:', torch.cuda.get_device_name(0))
-    # else:
-    #     print('using the CPU')
-    #     device = torch.device("cpu")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        print('GPU in use:', torch.cuda.get_device_name(0))
+    else:
+        print('using the CPU')
+        device = torch.device("cpu")
 
-    device = torch.device("cpu")
+    # device = torch.device("cpu")
 
 
     train_encoded_sentences, train_labels = preprocessing(df, model_name)
