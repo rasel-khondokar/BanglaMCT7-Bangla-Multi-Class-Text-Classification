@@ -26,15 +26,15 @@ from settings import DIR_IMAGES_EDA, DIR_RESOURCES, DIR_PERFORMENCE_REPORT, DIR_
 
 batch_size = 32
 MAX_LEN = 128  # max sequences length
-# if torch.cuda.is_available():
-#     device = torch.device("cuda")
-#     print('GPU in use:', torch.cuda.get_device_name(0))
-#     map_location = torch.device("cuda")
-# else:
-#     print('using the CPU')
-#     device = torch.device("cpu")
-device = torch.device("cpu")
-map_location = torch.device("cpu")
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    print('GPU in use:', torch.cuda.get_device_name(0))
+    map_location = torch.device("cuda")
+else:
+    print('using the CPU')
+    device = torch.device("cpu")
+    map_location = torch.device("cpu")
+
 def preprocessing(df, model_pretrained):
     sentences = df.cleaned.values
 

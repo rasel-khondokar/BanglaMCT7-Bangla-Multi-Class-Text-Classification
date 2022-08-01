@@ -1,5 +1,9 @@
+from itertools import chain
+
+import numpy as np
 import pandas as pd
 
+from configs import BASE_DIR
 from exploratory_analysis.eda import EDA
 from preprocessing.preprocessing import PreProcessor
 from settings import DIR_PERFORMENCE_REPORT
@@ -34,25 +38,41 @@ def make_excel_report_from_cls_report(name, files):
 #     'test_others_prothomalo_rm_oth_sagorsarker_bangla-bert-base_train'
 # ])
 
-preprocessor = PreProcessor()
+# preprocessor = PreProcessor()
 # data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
-data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
+# data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
 # # # exploratory data analysis
 # eda = EDA(data, 'test')
 # eda.analyze()
 def get_len(x):
     return len(x)
 
-data['l_r'] = data['cleanText'].apply(get_len)
-data['l_c'] =  data['cleaned'].apply(get_len)
-data['dif'] = data['l_r']-data['l_c']
-data = data.sort_values(by=['dif'])
+# data['l_r'] = data['cleanText'].apply(get_len)
+# data['l_c'] =  data['cleaned'].apply(get_len)
+# data['dif'] = data['l_r']-data['l_c']
+# data = data.sort_values(by=['dif'])
+#
+# for i in range(len(data)):
+#     print('___________________________________________________________________________________________________________________________________________________________')
+#     print(data.iloc[i]['dif'])
+#     print('raw : ')
+#     print(data.iloc[i]['cleanText'])
+#     print('clean : ')
+#     print(data.iloc[i]['cleaned'])
+#     print(data.iloc[i]['category'])
 
-for i in range(len(data)):
-    print('___________________________________________________________________________________________________________________________________________________________')
-    print(data.iloc[i]['dif'])
-    print('raw : ')
-    print(data.iloc[i]['cleanText'])
-    print('clean : ')
-    print(data.iloc[i]['cleaned'])
-    print(data.iloc[i]['category'])
+
+
+dataset_dir = f'{BASE_DIR}/DATASET/'
+file = f'{dataset_dir}collected_removed_urls_incorrect.csv'
+dataset = pd.read_csv(file)
+# dataset = dataset.sample(100)
+dataset.dropna(inplace=True)
+dataset = dataset.drop_duplicates(subset=['url'])
+cleanText = dataset['cleanText'].to_list()
+word_list = [word.strip().lower() for t in cleanText for word in
+                         t.strip().split()]
+# flatten_list = list(chain.from_iterable(word_list))
+print("Number of Unique Words:{}".format(len(set(word_list))))
+print("Number of Unique Words:{}".format(len(np.unique(word_list))))
+
