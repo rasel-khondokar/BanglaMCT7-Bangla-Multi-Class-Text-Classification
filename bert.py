@@ -360,19 +360,19 @@ def main():
 
     for model_name in MODEL_PRETRAINEDS:
         print(f'\n\n************************************************* {model_name} *************************************************************\n\n')
-        try:
-            if model_name == 'csebuetnlp/banglabert':
-                epochs = 10
-            elif model_name == 'sagorsarker/bangla-bert-base':
-                epochs = 10
-            if model_name == 'monsoon-nlp/bangla-electra':
-                epochs = 10
-            elif model_name == 'bert-base-multilingual-cased':
-                epochs = 10
+        # try:
+        if model_name == 'csebuetnlp/banglabert':
+            epochs = 10
+        elif model_name == 'sagorsarker/bangla-bert-base':
+            epochs = 10
+        if model_name == 'monsoon-nlp/bangla-electra':
+            epochs = 10
+        elif model_name == 'bert-base-multilingual-cased':
+            epochs = 10
 
-            train(df, df_test, model_name, MAX_LEN, batch_size, epochs)
-        except Exception as e:
-            print(model_name)
-            print(e)
+        train(df, df_test, model_name, MAX_LEN, batch_size, epochs)
+        # except Exception as e:
+        #     print(model_name)
+        #     print(e)
 if __name__=='__main__':
     main()
