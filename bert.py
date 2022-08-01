@@ -26,14 +26,13 @@ from settings import DIR_IMAGES_EDA, DIR_RESOURCES, DIR_PERFORMENCE_REPORT, DIR_
 
 batch_size = 32
 MAX_LEN = 128  # max sequences length
+
 if torch.cuda.is_available():
-    device = torch.device("cuda")
+    device = torch.device("cuda:0")
     print('GPU in use:', torch.cuda.get_device_name(0))
-    map_location = torch.device("cuda")
 else:
     print('using the CPU')
     device = torch.device("cpu")
-    map_location = torch.device("cpu")
 
 def preprocessing(df, model_pretrained):
     sentences = df.cleaned.values
@@ -81,14 +80,6 @@ def flat_accuracy(valid_tags, pred_tags):
 def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader):
     losses = []
     accuracies = []
-
-    if torch.cuda.is_available():
-        device = torch.device("cuda:0")
-        print('GPU in use:', torch.cuda.get_device_name(0))
-    else:
-        print('using the CPU')
-        device = torch.device("cpu")
-
     for e in range(epochs):
         print('======== Epoch {:} / {:} ========'.format(e + 1, epochs))
         start_train_time = time.time()
@@ -165,7 +156,7 @@ def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
 def test_bert_model(model_name, model_path):
     filepath_best_model = f"{DIR_RESOURCES}bert_models/{model_name}"
     model = torch.load(f'{filepath_best_model}/pytorch_model.bin', map_location=map_location)
-    # model.to(DEVICE)
+    model.to(device)
     model.eval()
     print(0)
 
@@ -267,21 +258,6 @@ def plot_accuracy_and_loss_bert(name, acc, loss):
 
 def train(df, df_test, model_name, MAX_LEN, batch_size, epochs):
     num_labels = len(df.category.unique())
-    # device_name = tf.test.gpu_device_name()
-    #
-    # if device_name == '/device:GPU:0':
-    #     print(f'Found GPU at: {device_name}')
-    #
-    if torch.cuda.is_available():
-        device = torch.device("cuda")
-        print('GPU in use:', torch.cuda.get_device_name(0))
-    else:
-        print('using the CPU')
-        device = torch.device("cpu")
-
-    # device = torch.device("cpu")
-
-
     train_encoded_sentences, train_labels = preprocessing(df, model_name)
     train_attention_masks = attention_masks(train_encoded_sentences)
 
