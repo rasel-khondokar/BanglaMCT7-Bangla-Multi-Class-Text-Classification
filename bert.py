@@ -83,7 +83,7 @@ def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
     accuracies = []
 
     if torch.cuda.is_available():
-        device = torch.device("cuda")
+        device = torch.device("cuda:0")
         print('GPU in use:', torch.cuda.get_device_name(0))
     else:
         print('using the CPU')
@@ -106,7 +106,7 @@ def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
             input_masks = batch[1].to(device)
             input_labels = batch[2].to(device)
 
-            model.zero_grad().to(device)
+            model.zero_grad()
 
             # forward propagation
             out = model(input_data,
