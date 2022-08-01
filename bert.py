@@ -78,9 +78,17 @@ def compute_accuracy(preds, labels):
 def flat_accuracy(valid_tags, pred_tags):
     return (np.array(valid_tags) == np.array(pred_tags)).mean()
 
-def run_train(epochs, model, train_dataloader, device, optimizer, validation_dataloader):
+def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader):
     losses = []
     accuracies = []
+
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        print('GPU in use:', torch.cuda.get_device_name(0))
+    else:
+        print('using the CPU')
+        device = torch.device("cpu")
+
     for e in range(epochs):
         print('======== Epoch {:} / {:} ========'.format(e + 1, epochs))
         start_train_time = time.time()
@@ -98,7 +106,7 @@ def run_train(epochs, model, train_dataloader, device, optimizer, validation_dat
             input_masks = batch[1].to(device)
             input_labels = batch[2].to(device)
 
-            model.zero_grad()
+            model.zero_grad().to(device)
 
             # forward propagation
             out = model(input_data,
@@ -329,7 +337,7 @@ def train(df, df_test, model_name, MAX_LEN, batch_size, epochs):
                                                 num_warmup_steps = 0, # 10% * datasetSize/batchSize
                                                 num_training_steps = total_steps)
 
-    losses, accuracies = run_train(epochs, model, train_dataloader, device, optimizer, validation_dataloader)
+    losses, accuracies = run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
     name = model_name.replace("/", "_")
     plot_accuracy_and_loss_bert(name, accuracies, losses)
 
