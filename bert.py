@@ -146,7 +146,7 @@ def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
 
             #  Uncomment for GPU execution
             logits = logits.detach().cpu().numpy()
-            eval_labels = eval_labels.to(accelerator.device).numpy()
+            eval_labels = eval_labels.to('cpu').numpy()
             batch_acc = compute_accuracy(logits, eval_labels)
 
             # Uncomment for CPU execution
