@@ -16,7 +16,7 @@ from transformers import BertForSequenceClassification, AdamW, BertConfig, BertP
 from transformers import get_linear_schedule_with_warmup
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
-
+from accelerate import Accelerator
 # get cleaned train and test data
 # get cleaned train and test data
 from preprocessing.preprocessing import PreProcessor
@@ -78,6 +78,12 @@ def flat_accuracy(valid_tags, pred_tags):
     return (np.array(valid_tags) == np.array(pred_tags)).mean()
 
 def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader):
+
+    accelerator = Accelerator()
+    model, optimizer, train_dataloader, lr_scheduler = accelerator.prepare(
+        model, optimizer, train_dataloader, validation_dataloader
+    )
+
     losses = []
     accuracies = []
     for e in range(epochs):
@@ -93,9 +99,9 @@ def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
                 print(f'{step}/{len(train_dataloader)} --> Time elapsed {elapsed}')
 
             # input_data, input_masks, input_labels = batch
-            input_data = batch[0].to(device)
-            input_masks = batch[1].to(device)
-            input_labels = batch[2].to(device)
+            input_data = batch[0].to(accelerator.device)
+            input_masks = batch[1].to(accelerator.device)
+            input_labels = batch[2].to(accelerator.device)
 
             model.zero_grad()
 
@@ -110,7 +116,8 @@ def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
 
 
             # backward propagation
-            loss.backward()
+            # loss.backward()
+            accelerator.backward(loss)
 
             torch.nn.utils.clip_grad_norm(model.parameters(), 1)
 
@@ -128,7 +135,7 @@ def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
 
         eval_loss, eval_acc = 0, 0
         for step, batch in enumerate(validation_dataloader):
-            batch = tuple(t.to(device) for t in batch)
+            batch = tuple(t.to(accelerator.device) for t in batch)
             eval_data, eval_masks, eval_labels = batch
             with torch.no_grad():
                 out = model(eval_data,
@@ -138,12 +145,12 @@ def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
 
 
             #  Uncomment for GPU execution
-            # logits = logits.detach().cpu().numpy()
-            # eval_labels = eval_labels.to('cpu').numpy()
-            # batch_acc = compute_accuracy(logits, eval_labels)
+            logits = logits.detach().cpu().numpy()
+            eval_labels = eval_labels.to(accelerator.device).numpy()
+            batch_acc = compute_accuracy(logits, eval_labels)
 
             # Uncomment for CPU execution
-            batch_acc = compute_accuracy(logits.numpy(), eval_labels.numpy())
+            # batch_acc = compute_accuracy(logits.numpy(), eval_labels.numpy())
 
             eval_acc += batch_acc
 
