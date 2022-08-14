@@ -309,10 +309,8 @@ class PreProcessor():
         dataset = dataset.reset_index()
         if is_split:
             data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.category.values)
-            file = f'{dataset_dir}removed_data.csv'
-            removed_data = pd.read_csv(file)
+            removed_data = pd.read_csv(f'{dataset_dir}removed_data.csv')
             data = pd.concat([data, removed_data])
-            data = data.drop_duplicates(subset=['url'])
             data = data[['cleanText', 'category']]
             data = data.reset_index()
             # Remove null
