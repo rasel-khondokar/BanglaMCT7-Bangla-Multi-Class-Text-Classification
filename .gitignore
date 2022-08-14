@@ -12,3 +12,4 @@ cc.bn.300.vec
 cc.bn.300.vec.gz
 export_v2.py
 bert_models/
+test_.py

@@ -81,8 +81,8 @@ class PreProcessor():
                         df = df.append({'cleanText':text, 'category':dir},
                                                  ignore_index=True)
 
-                        if i>10:
-                            break
+                        # if i>10:
+                        #     break
 
         df = df[df['category'].isin(target_categories)]
         df['category'] = df['category'].replace(target_categories,
@@ -195,7 +195,7 @@ class PreProcessor():
             df = pd.read_csv(data_file)
             dataset = dataset.append(df, ignore_index=True)
 
-        dataset = dataset.sample(100, random_state=0)
+        # dataset = dataset.sample(100, random_state=0)
 
         df = pd.DataFrame()
         df['cleanText'] = dataset['content']
@@ -296,12 +296,67 @@ class PreProcessor():
             df['cleaned'] = df['cleanText'].apply(self.cleaning_documents)
 
             return df
+    def read_incorrect_and_noise(self, is_split=True):
+        dataset_dir = f'{BASE_DIR}/DATASET/'
+        file = f'{dataset_dir}collected_removed_urls_incorrect.csv'
+        dataset = pd.read_csv(file)
+        # dataset = dataset.sample(100)
+        file = f'{dataset_dir}removed_data.csv'
+        dataset_1 = pd.read_csv(file)
+        dataset = pd.concat([dataset, dataset_1])
+        dataset = dataset.drop_duplicates(subset=['url'])
+        dataset = dataset[['cleanText', 'category']]
+        dataset = dataset.reset_index()
+        if is_split:
+            data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.category.values)
+
+            # Remove null
+            print(f'Before removing null Train data : {len(data)}')
+            data.dropna(inplace=True)
+            print(f'After removing null Train data : {len(data)}')
+
+            print(f'Before removing null Test data: {len(data_test)}')
+            data_test.dropna(inplace=True)
+            print(f'After removing null Test data : {len(data_test)}')
+
+            # Remove duplicates
+            print(f'Before removing duplicates Train data: {len(data)}')
+            # data = data.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Train data : {len(data)}')
+
+            print(f'Before removing duplicates Test data : {len(data_test)}')
+            # data_test = data_test.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Test data : {len(data_test)}')
+
+            data = data[['cleanText', 'category']]
+            data_test = data_test[['cleanText', 'category']]
+
+            # remove unnecessary punctuation & stopwords
+            data['cleaned'] = data['cleanText'].apply(self.cleaning_documents)
+            data_test['cleaned'] = data_test['cleanText'].apply(self.cleaning_documents)
+
+            self.data, self.data_test = data, data_test
+
+            return data, data_test
+        else:
+            print(f'Before removing null : {len(dataset)}')
+            dataset.dropna(inplace=True)
+            print(f'After removing null : {len(dataset)}')
+            # Remove duplicates
+            print(f'Before removing duplicates Train data: {len(dataset)}')
+            # dataset = dataset.drop_duplicates(subset=['url'])
+            print(f'After removing duplicates Train data : {len(dataset)}')
+            df = dataset[['url', 'cleanText', 'category']]
+            # remove unnecessary punctuation & stopwords
+            df['cleaned'] = df['cleanText'].apply(self.cleaning_documents)
+
+            return df
 
     def read_collected_data_incorrect_pred_removed(self, is_split=True):
         dataset_dir = f'{BASE_DIR}/DATASET/'
         file = f'{dataset_dir}collected_removed_urls_incorrect.csv'
         dataset = pd.read_csv(file)
-        # dataset = dataset.sample(10000)
+        dataset = dataset.sample(100)
 
         dataset = dataset.reset_index()
         if is_split:

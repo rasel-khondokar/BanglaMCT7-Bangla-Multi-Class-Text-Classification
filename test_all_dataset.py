@@ -19,21 +19,21 @@ from settings import MODEL_FASTTEXT_SIMPLE, DIR_RESOURCES, MODEL_BIDIRECTIONAL_G
 
 preprocessor = PreProcessor()
 
-# datasets = {'osac_rm_oth':preprocessor.read_osac(is_split=False),
-#             'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False),
-#             'bard_rm_oth':preprocessor.read_bard(is_split=False)
-# }
+datasets = {'osac_rm_oth':preprocessor.read_osac(is_split=False),
+            'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False),
+            'bard_rm_oth':preprocessor.read_bard(is_split=False)
+}
 
 # data, data_test = preprocessor.read_collected_data_incorrect_pred_removed()
 # datasets = {'dataset_test': data_test,
 #             'dataset_train': data
 #             }
 
-datasets = {'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False)
-}
+# datasets = {'prothomalo_rm_oth':preprocessor.read_prothomalo(is_split=False)
+# }
 
 def run_automl_test():
-    models = {'automl_best_model_LinearSVC': ['automl_best_model_LinearSVC_tfidf_ml_model.pickle', MODEL_ML]
+    models = {'automl_best_model_LinearSVC': ['incorrect_pred_removed_LinearSVC_tfidf_ml_model.pickle', MODEL_ML]
               }
 
     for model_key in models:
@@ -56,7 +56,7 @@ def run_automl_test():
                 model = dill.load(handle)
 
 
-            with open(f'{DIR_RESOURCES}automl_best_model_LinearSVC_tfidf_ml_tfidf_encoder.pickle', 'rb') as handle:
+            with open(f'{DIR_RESOURCES}incorrect_pred_removed_LinearSVC_tfidf_ml_tfidf_encoder.pickle', 'rb') as handle:
                 tfidf = dill.load(handle)
             x = tfidf.transform(dataset['cleaned'])
 
@@ -208,15 +208,15 @@ def run_test_train_test_on_bert():
 
 
 def main():
-    try:
-        run_test_train_test_on_bert()
-    except Exception as e:
-        print(e)
-
-    try:
-        run_dl_test()
-    except Exception as e:
-        print(e)
+    # try:
+    #     run_test_train_test_on_bert()
+    # except Exception as e:
+    #     print(e)
+    #
+    # try:
+    #     run_dl_test()
+    # except Exception as e:
+    #     print(e)
     # try:
     #     run_test_othres_on_bert()
     # except Exception as e:
