@@ -528,7 +528,10 @@ class PreProcessor():
             # ==================================== Pad Sequences ==============================
             corpus = keras.preprocessing.sequence.pad_sequences(sequences, value=0.0,
                                                                 padding='post', maxlen=padding_length)
-            print("\n\t\t\t====== Paded Sequences ======\n", dataset.cleaned[10], "\n", corpus[10])
+            try:
+                print("\n\t\t\t====== Paded Sequences ======\n", dataset.cleaned[10], "\n", corpus[10])
+            except Exception as e:
+                print(e)
 
             # save the tokenizer into a pickle file
             with open(DIR_RESOURCES + '/tokenizer.pickle', 'wb') as handle:
