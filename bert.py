@@ -28,7 +28,7 @@ batch_size = 32
 MAX_LEN = 128  # max sequences length
 
 if torch.cuda.is_available():
-    device = torch.device("cuda:0")
+    device = torch.device("cuda")
     print('GPU in use:', torch.cuda.get_device_name(0))
 else:
     print('using the CPU')
@@ -83,7 +83,7 @@ def run_train(epochs, model, train_dataloader, optimizer, validation_dataloader)
     # model, optimizer, train_dataloader, lr_scheduler = accelerator.prepare(
     #     model, optimizer, train_dataloader, validation_dataloader
     # )
-
+    model = model.to(device)
     losses = []
     accuracies = []
     for e in range(epochs):
