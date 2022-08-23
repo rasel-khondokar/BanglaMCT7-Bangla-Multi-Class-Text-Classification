@@ -352,7 +352,7 @@ def main():
                          MODEL_BERT_SAGORSARKAR]
 
     preprocessor = PreProcessor()
-    df, df_test = preprocessor.read_collected_data_incorrect_pred_removed()
+    df, df_test = preprocessor.read_incorrect_and_noise()
 
     for model_name in MODEL_PRETRAINEDS:
         print(f'\n\n************************************************* {model_name} *************************************************************\n\n')
