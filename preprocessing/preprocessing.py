@@ -301,19 +301,18 @@ class PreProcessor():
         file = f'{dataset_dir}collected_removed_urls_incorrect.csv'
         dataset = pd.read_csv(file)
         # dataset = dataset.sample(100)
-        # file = f'{dataset_dir}removed_data.csv'
-        # dataset_1 = pd.read_csv(file)
-        # dataset = pd.concat([dataset, dataset_1])
-        dataset = dataset.drop_duplicates(subset=['url'])
-        dataset = dataset[['cleanText', 'category']]
-        dataset = dataset.reset_index()
+        # dataset = dataset.reset_index()
+        dataset = dataset[['url', 'cleanText', 'category', 'cleaned']]
         if is_split:
             data, data_test = train_test_split(dataset, test_size=.2, stratify=dataset.category.values)
             removed_data = pd.read_csv(f'{dataset_dir}removed_data.csv')
+            removed_data['cleaned'] = removed_data['cleanText']
+            removed_data = removed_data[['url', 'cleanText', 'category', 'cleaned']]
             data = pd.concat([data, removed_data])
-            data = data[['cleanText', 'category']]
             data = data.reset_index()
+            data = data[['url', 'cleanText', 'category', 'cleaned']]
             # Remove null
+            print(data.isnull().sum())
             print(f'Before removing null Train data : {len(data)}')
             data.dropna(inplace=True)
             print(f'After removing null Train data : {len(data)}')
@@ -324,11 +323,11 @@ class PreProcessor():
 
             # Remove duplicates
             print(f'Before removing duplicates Train data: {len(data)}')
-            # data = data.drop_duplicates(subset=['url'])
+            data = data.drop_duplicates(subset=['url'])
             print(f'After removing duplicates Train data : {len(data)}')
 
             print(f'Before removing duplicates Test data : {len(data_test)}')
-            # data_test = data_test.drop_duplicates(subset=['url'])
+            data_test = data_test.drop_duplicates(subset=['url'])
             print(f'After removing duplicates Test data : {len(data_test)}')
 
             data = data[['cleanText', 'category']]
@@ -347,9 +346,11 @@ class PreProcessor():
             print(f'After removing null : {len(dataset)}')
             # Remove duplicates
             print(f'Before removing duplicates Train data: {len(dataset)}')
-            # dataset = dataset.drop_duplicates(subset=['url'])
+            dataset = dataset.drop_duplicates(subset=['url'])
             print(f'After removing duplicates Train data : {len(dataset)}')
+
             df = dataset[['url', 'cleanText', 'category']]
+
             # remove unnecessary punctuation & stopwords
             df['cleaned'] = df['cleanText'].apply(self.cleaning_documents)
 
