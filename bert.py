@@ -338,7 +338,7 @@ def train(df, df_test, model_name, MAX_LEN, batch_size, epochs):
     # save trained model
     torch.save(model, f'{output_dir}/model.pt')
 
-    report_name = 'without_outlier'
+    report_name = 'with_outlier'
     run_bert_test(model_name, df_test, is_test=True, report_name=report_name)
     run_bert_test(model_name, df, is_test=False, report_name=report_name)
 
