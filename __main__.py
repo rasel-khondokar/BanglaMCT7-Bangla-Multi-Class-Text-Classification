@@ -16,7 +16,7 @@ from training.training import ModelTrainer
 def main():
     for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
         make_dir_if_not_exists(dir)
-    name = 'incorrect_pred_removed'
+    name = 'with_outlier'
     # get cleaned train and test data
     preprocessor = PreProcessor()
     data, data_test = preprocessor.read_incorrect_and_noise()
