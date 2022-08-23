@@ -338,8 +338,9 @@ def train(df, df_test, model_name, MAX_LEN, batch_size, epochs):
     # save trained model
     torch.save(model, f'{output_dir}/model.pt')
 
-    run_bert_test(model_name, df_test, is_test=True)
-    run_bert_test(model_name, df, is_test=False)
+    report_name = 'without_outlier'
+    run_bert_test(model_name, df_test, is_test=True, report_name=report_name)
+    run_bert_test(model_name, df, is_test=False, report_name=report_name)
 
 def main():
     for dir in [DIR_REPORT, DIR_IMAGES_HISTORY, DIR_PERFORMENCE_REPORT, DIR_IMAGES_EDA]:
@@ -351,7 +352,7 @@ def main():
                          MODEL_BERT_SAGORSARKAR]
 
     preprocessor = PreProcessor()
-    df, df_test = preprocessor.read_incorrect_and_noise()
+    df, df_test = preprocessor.read_collected_data_incorrect_pred_removed()
 
     for model_name in MODEL_PRETRAINEDS:
         print(f'\n\n************************************************* {model_name} *************************************************************\n\n')
