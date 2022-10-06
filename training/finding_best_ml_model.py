@@ -5,10 +5,10 @@ from preprocessing.preprocessing import PreProcessor
 
 
 def get_best_model():
-    name = 'auto_tuning'
+    name = 'salman_auto_tuning'
 
     preprocessor = PreProcessor()
-    data, data_test = preprocessor.read_data()
+    data, data_test = preprocessor.read_cyberbullying_dataset()
 
     corpus = preprocessor.vectorize_tfidf(data.cleaned, (1, 1), name)
     labels, class_names = preprocessor.encode_category(data.category)
