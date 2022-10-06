@@ -374,8 +374,8 @@ class PreProcessor():
         file = f'{dataset_dir}cyberbullying/cyberbullying.csv'
         dataset = pd.read_csv(file)
         # dataset = pd.DataFrame()
-        dataset_labeled = self.read_cyberbullying_labeled_data()
-        dataset = dataset.append(dataset_labeled, ignore_index=True)
+        # dataset_labeled = self.read_cyberbullying_labeled_data()
+        # dataset = dataset.append(dataset_labeled, ignore_index=True)
 
         # dataset = dataset.sample(100)
 
