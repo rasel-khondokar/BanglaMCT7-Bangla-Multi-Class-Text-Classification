@@ -32,7 +32,7 @@ def scrape_prothom_alo():
 
    for category in categories:
       time.sleep(3)
-      thread = ScraperThread(categories, category)
+      thread = ScraperThread(categories, category, main_prothom_alo)
       thread.start()
 
 def scrape_banglatribune():
@@ -50,7 +50,7 @@ def scrape_jagonews24():
    categories = {'sports':'sports', 'international':'international', 'economy':'economy', 'entertainment':'entertainment',
                          'technology':'technology', 'politics':'politics', 'education':'education'}
 
-   categories = {'sports':'sports'}
+   # categories = {'sports':'sports'}
 
    for category in categories:
       time.sleep(3)
@@ -71,10 +71,12 @@ def scrape_ittefaqe():
       thread = ScraperThread(categories, category, main_ittefaq)
 
 def scrape_samakal():
-   categories = {'international':'international', 'economy':'economics',
-                         'technology':'technology', 'education':'education'}
+   # categories = {'international':'international', 'economy':'economics',
+   #                       'technology':'technology', 'education':'education'}
 
-   # categories = {'technology':'technology'}
+   categories = {'sports': 'sports',
+                 'entertainment': 'entertainment',
+                 'politics': 'politics'}
 
    for category in categories:
       time.sleep(3)

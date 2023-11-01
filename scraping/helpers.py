@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 # Request to URL using Chrome driver
-from configs import CHROMEDRIVER_PATH, BASE_DIR
+from configs import CHROMEDRIVER_PATH, BASE_DIR, RESOURCES_DIR
 
 
 def get_driver(url, headless=True, chrome_version=False):
@@ -22,7 +22,7 @@ def get_driver(url, headless=True, chrome_version=False):
     chrome_dir = BASE_DIR+'/'+CHROMEDRIVER_PATH
     make_dir_if_not_exists(chrome_dir)
     chrome_file_path = chrome_dir + '/chromedriver'
-
+    option.add_extension(f"{RESOURCES_DIR}/ublock_origin.crx")
     try:
         driver = webdriver.Chrome(chrome_file_path, chrome_options=option)
         driver.get(url)

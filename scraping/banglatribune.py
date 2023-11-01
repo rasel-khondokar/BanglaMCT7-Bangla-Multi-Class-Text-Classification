@@ -50,9 +50,9 @@ class DcraScraper():
                     except Exception as e:
                         print(e)
                     try:
-                        paragraphs = driver.find_elements_by_css_selector('.content_item_number0 .alignfull , .content_item_number0 strong')
+                        paragraphs = driver.find_elements_by_css_selector('.alignfull')
                         text = ''
-                        for paragraph in paragraphs[:-1]:
+                        for paragraph in paragraphs:
                             text += f'{paragraph.text}\n\n'
                         data_dict['raw_text'] = text
                     except Exception as e:
@@ -60,8 +60,8 @@ class DcraScraper():
 
                     try:
                         add_to_existing_json(data_dict, data_file)
-                    except:
-                        pass
+                    except Exception as e:
+                        print(e)
 
                     # Back to the main window
                     time.sleep(2)
@@ -104,9 +104,9 @@ class DcraScraper():
 
                 try:
                     self.get_posts_posts_page(driver, urls, existing, category, data_file)
-                except:
-                    pass
-
+                except Exception as e:
+                    print(e)
+                break
                 # load more
                 try:
                     load_more = driver.find_element_by_css_selector('.next_page')

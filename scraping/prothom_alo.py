@@ -40,7 +40,7 @@ class DcraScraper():
 
                         try:
                             data_dict['published_date'] = driver.find_element(By.CSS_SELECTOR,
-                                                                              '.storyPageMetaData-m__publish-time__19bdV').text
+                                                                              '.time-social-share-wrapper time').text
                         except Exception as e:
                             print(e)
                         try:
@@ -83,16 +83,22 @@ class DcraScraper():
         print(len(existing))
 
         driver.get(main_site + categories[category])
-        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.stories-set')))
+        try:
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.stories-set')))
+        except Exception as e:
+            # print(e)
+            pass
 
+        BROKEN = 0
         SCRAPING_STATUS = True
         while SCRAPING_STATUS:
             try:
-
-                headings = driver.find_elements_by_css_selector('.bn-story-card h2')
+                url_csss = '.card-with-image-zoom'
+                WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, url_csss)))
+                headings = driver.find_elements_by_css_selector(url_csss)
                 urls = []
                 for heading in headings:
-                    urls.append( heading.find_element_by_xpath('..') )
+                    urls.append(heading)
 
                 # Try to set last date as first date to check only new jobs
                 try:
@@ -118,20 +124,27 @@ class DcraScraper():
                     time.sleep(10)
                 except Exception as e:
                     print(e)
-                print(0)
             except Exception as e:
                 print(e)
                 SCRAPING_STATUS = False
-                break
+                BROKEN+1
+                if BROKEN > 3:
+                    break
 
 def main_prothom_alo(categories, category):
     # chromedriver_autoinstaller.install(True)
-    time.sleep(10)
+    time.sleep(5)
     chrome_version = chromedriver_autoinstaller.get_chrome_version()
-    driver_dcra = get_driver('https://www.prothomalo.com/', chrome_version = chrome_version, headless=True)
+    driver_dcra = get_driver('https://www.prothomalo.com/',
+                             chrome_version = chrome_version,
+                             headless=True)
     scraper = DcraScraper(driver_dcra)
     scraper.scrape(categories, category)
     driver_dcra.quit()
 
 # if __name__ == "__main__":
-#     main_prothom_alo()
+#     categories = {'sports': 'sports', 'international': 'world', 'economy': 'business', 'entertainment': 'entertainment',
+#                   'technology': 'education/science-tech', 'politics': 'politics', 'education': 'education'}
+#
+#     for category in categories:
+#         main_prothom_alo(categories, category)

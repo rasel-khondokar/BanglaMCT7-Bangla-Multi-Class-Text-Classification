@@ -82,13 +82,16 @@ class DcraScraper():
         print(len(existing))
 
         driver.get(main_site + categories[category])
-        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#loadMoreContent')))
+        with open('test.html', 'w') as f:
+            f.write(driver.find_element_by_css_selector('.body').get_attribute('innerHTML'))
+
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.category-list-content-box a')))
 
         SCRAPING_STATUS = True
         while SCRAPING_STATUS:
             try:
 
-                urls = driver.find_elements_by_css_selector('#loadMoreContent h3 a')
+                urls = driver.find_elements_by_css_selector('.category-list-content-box a')
 
                 # Try to set last date as first date to check only new jobs
                 try:
@@ -100,11 +103,11 @@ class DcraScraper():
                 urls = urls[first_index:last_date_index]
 
                 try:
-                    # print(urls[0].get_attribute('title'))
-                    # print(urls[-1].get_attribute('title'))
                     self.get_posts_posts_page(driver, urls, existing, category, data_file)
                 except:
                     pass
+
+                break
 
                 # load more
                 try:
@@ -126,9 +129,9 @@ class DcraScraper():
 
 def main_jagonews24(categories, category):
     # chromedriver_autoinstaller.install(True)
-    time.sleep(10)
+    time.sleep(5)
     chrome_version = chromedriver_autoinstaller.get_chrome_version()
-    driver_dcra = get_driver('https://www.jagonews24.com/', chrome_version = chrome_version, headless=False)
+    driver_dcra = get_driver('https://www.jagonews24.com/', chrome_version = chrome_version, headless=True)
     scraper = DcraScraper(driver_dcra)
     scraper.scrape(categories, category)
     driver_dcra.quit()
